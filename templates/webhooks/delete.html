@@ -1,0 +1,41 @@
+<!-- templates/webhooks/delete.html -->
+{% extends "base.html" %}
+{% block title %}Delete Webhook - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-traderelay">
+            <div class="card-header">
+                <h5 class="mb-0 text-danger">
+                    <i class="fa-solid fa-trash me-2"></i>
+                    Delete Webhook
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+                
+                <p>Are you sure you want to delete the webhook <strong>"{{ webhook.name }}"</strong>?</p>
+                
+                <p class="text-gray-tagline">
+                    This will permanently delete the webhook and all its logs. 
+                    Any TradingView alerts using this webhook will stop working.
+                </p>
+                
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash me-2"></i>Delete Webhook
+                    </button>
+                    <a href="{% url 'bots:webhook_list' %}" class="btn btn-traderelay-secondary">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

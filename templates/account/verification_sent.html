@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Email Verification Sent - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      <div class="card shadow-lg border-0 p-4 text-center">
+        <div class="mb-4">
+          <i class="fa-solid fa-envelope-circle-check fa-3x text-primary"></i>
+        </div>
+        <h2 class="fw-bold mb-3">Email Verification Sent</h2>
+        <p class="fs-5 text-tagline mb-4">
+          A verification email has been sent to your email address.<br>
+          Please check your inbox and follow the link to verify your account.<br>
+          If you do not see the email, check your spam folder or <a href="mailto:support@example.com" class="text-primary">contact support</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

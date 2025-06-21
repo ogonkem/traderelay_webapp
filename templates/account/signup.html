@@ -1,0 +1,670 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Sign Up - TradeRelay{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-75">
+      <div class="col-md-7 col-lg-6 col-xl-5">
+        <!-- Sign Up Card -->
+        <div class="card card-traderelay auth-card shadow-lg">
+          <div class="card-body p-4 p-md-5">
+            <!-- Header -->
+            <div class="text-center mb-4">
+              <div class="icon-bg-primary mx-auto mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.3rem;">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <h2 class="fw-bold text-gray-trade mb-2">Create Account</h2>
+              <p class="text-gray-tagline">Join thousands of successful traders</p>
+            </div>
+
+            <!-- Benefits Banner -->
+            <div class="benefits-banner mb-4">
+              <div class="d-flex justify-content-between text-center">
+                <div class="benefit-item flex-fill">
+                  <i class="fa-solid fa-bolt fa-traderelay-warning mb-2 d-block"></i>
+                  <small class="text-gray-tagline fw-medium">Fast Setup</small>
+                </div>
+                <div class="benefit-item flex-fill">
+                  <i class="fa-solid fa-shield-check fa-traderelay-success mb-2 d-block"></i>
+                  <small class="text-gray-tagline fw-medium">Secure</small>
+                </div>
+                <div class="benefit-item flex-fill">
+                  <i class="fa-solid fa-gift fa-traderelay-primary mb-2 d-block"></i>
+                  <small class="text-gray-tagline fw-medium">Free Trial</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Sign Up Section -->
+            {% if socialaccount_providers %}
+              <div class="social-signup mb-4">
+                {% for provider in socialaccount_providers %}
+                  <a class="btn btn-social w-100 mb-2" href="{{ provider.login_url }}">
+                    <div class="d-flex align-items-center justify-content-center">
+                      {% if provider.id == 'google' %}
+                        <i class="fab fa-google me-3" style="color:#ea4335;"></i>
+                      {% elif provider.id == 'microsoft' %}
+                        <i class="fab fa-microsoft me-3" style="color:#0078d4;"></i>
+                      {% elif provider.id == 'github' %}
+                        <i class="fab fa-github me-3" style="color:#333;"></i>
+                      {% else %}
+                        <i class="fa-solid fa-user me-3"></i>
+                      {% endif %}
+                      <span>Continue with {{ provider.name }}</span>
+                    </div>
+                  </a>
+                {% endfor %}
+                
+                <!-- Divider -->
+                <div class="divider">
+                  <div class="divider-line"></div>
+                  <span class="divider-text text-gray-tagline">or create account with email</span>
+                  <div class="divider-line"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Sign Up Form -->
+            <form method="post" action="{% url 'account_signup' %}" class="auth-form">
+              {% csrf_token %}
+              
+              <!-- Non-field errors -->
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  <div class="d-flex align-items-start">
+                    <i class="fa-solid fa-circle-exclamation fa-traderelay-danger me-2 mt-1"></i>
+                    <div>
+                      {% for error in form.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+
+              <!-- Dynamic Form Fields -->
+              {% for field in form.visible_fields %}
+                <div class="form-group mb-3">
+                  <label class="form-label-traderelay" for="{{ field.id_for_label }}">
+                    <!-- Field-specific icons -->
+                    {% if 'email' in field.name %}
+                      <i class="fa-solid fa-envelope me-2 fa-traderelay-primary"></i>
+                    {% elif 'username' in field.name %}
+                      <i class="fa-solid fa-user me-2 fa-traderelay-primary"></i>
+                    {% elif 'password' in field.name %}
+                      <i class="fa-solid fa-lock me-2 fa-traderelay-primary"></i>
+                    {% elif 'first_name' in field.name or 'last_name' in field.name %}
+                      <i class="fa-solid fa-id-card me-2 fa-traderelay-primary"></i>
+                    {% else %}
+                      <i class="fa-solid fa-pen me-2 fa-traderelay-primary"></i>
+                    {% endif %}
+                    {{ field.label }}
+                    {% if field.field.required %}
+                      <span class="text-danger">*</span>
+                    {% endif %}
+                  </label>
+                  
+                  <!-- Password fields with toggle -->
+                  {% if 'password' in field.name %}
+                    <div class="input-group">
+                      {{ field|add_class:"form-control form-control-traderelay"|attr:"autocomplete:new-password" }}
+                      <button type="button" class="btn btn-outline-secondary password-toggle" tabindex="-1">
+                        <i class="fa-solid fa-eye fa-traderelay-primary"></i>
+                      </button>
+                    </div>
+                  {% else %}
+                    {{ field|add_class:"form-control form-control-traderelay" }}
+                  {% endif %}
+                  
+                  <!-- Help text -->
+                  {% if field.help_text %}
+                    <small class="form-help-text text-gray-tagline">
+                      <i class="fa-solid fa-info-circle me-1"></i>
+                      {{ field.help_text }}
+                    </small>
+                  {% endif %}
+                  
+                  <!-- Field errors -->
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for error in field.errors %}
+                        <small class="text-danger">
+                          <i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}
+                        </small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+
+              <!-- Terms and Privacy -->
+              <div class="terms-agreement mb-4">
+                <div class="d-flex align-items-start">
+                  <input class="form-check-input mt-1 me-3 flex-shrink-0" type="checkbox" id="terms-agreement" required>
+                  <label class="form-check-label text-gray-tagline" for="terms-agreement">
+                    I agree to the 
+                    <a href="#" class="terms-link">Terms of Service</a> 
+                    and 
+                    <a href="#" class="terms-link">Privacy Policy</a>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button class="btn btn-traderelay-primary w-100 mb-3" type="submit">
+                <i class="fa-solid fa-user-plus me-2"></i>
+                Create Account
+              </button>
+
+              <!-- Login Prompt -->
+              <div class="auth-links text-center">
+                <div class="login-prompt">
+                  <span class="text-gray-tagline">Already have an account?</span>
+                  <a href="{% url 'account_login' %}" class="login-link">
+                    Sign in here
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="signup-features mt-4">
+          <div class="d-flex justify-content-between text-center">
+            <div class="feature-highlight flex-fill">
+              <div class="icon-bg-primary mx-auto mb-2" style="width: 2.5rem; height: 2.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <small class="text-gray-tagline">
+                <strong>2-minute</strong><br>
+                setup process
+              </small>
+            </div>
+            <div class="feature-highlight flex-fill">
+              <div class="icon-bg-primary mx-auto mb-2" style="width: 2.5rem; height: 2.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-credit-card"></i>
+              </div>
+              <small class="text-gray-tagline">
+                <strong>No credit card</strong><br>
+                required
+              </small>
+            </div>
+            <div class="feature-highlight flex-fill">
+              <div class="icon-bg-primary mx-auto mb-2" style="width: 2.5rem; height: 2.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-headset"></i>
+              </div>
+              <small class="text-gray-tagline">
+                <strong>24/7 support</strong><br>
+                when you need it
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice text-center mt-4">
+          <div class="d-flex justify-content-center align-items-center gap-3">
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-shield-check fa-traderelay-success me-2"></i>
+              <small class="text-gray-tagline">256-bit SSL encryption</small>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="fa-solid fa-lock fa-traderelay-success me-2"></i>
+              <small class="text-gray-tagline">SOC 2 compliant</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Sign Up Specific Styles */
+.benefits-banner {
+  background: linear-gradient(135deg, 
+    rgba(37, 99, 235, 0.05) 0%, 
+    rgba(59, 130, 246, 0.05) 100%);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1rem;
+  border: 1px solid rgba(37, 99, 235, 0.1);
+}
+
+.benefit-item {
+  padding: 0.5rem;
+  transition: all var(--transition);
+}
+
+.benefit-item:hover {
+  transform: translateY(-2px);
+}
+
+.benefit-item i {
+  font-size: 1.5rem;
+}
+
+.benefit-item:not(:last-child) {
+  border-right: 1px solid rgba(37, 99, 235, 0.1);
+}
+
+/* Enhanced Form Styles */
+.form-help-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Terms Agreement */
+.terms-agreement {
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid var(--gray-200);
+}
+
+.terms-agreement .form-check-input {
+  border-radius: var(--radius-sm);
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.terms-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.terms-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+/* Login Prompt */
+.login-prompt {
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+}
+
+.login-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.login-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+/* Sign Up Features */
+.signup-features {
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.feature-highlight {
+  transition: all var(--transition);
+  padding: 1rem 0.5rem;
+  border-radius: var(--radius-md);
+}
+
+.feature-highlight:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+.feature-highlight:not(:last-child) {
+  border-right: 1px solid var(--gray-200);
+}
+
+/* Security Notice */
+.security-notice {
+  animation: fadeIn 1s ease-out 0.5s both;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 0.5rem;
+}
+
+.password-strength-bar {
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.password-strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.password-strength-fill.weak {
+  width: 25%;
+  background: var(--danger);
+}
+
+.password-strength-fill.fair {
+  width: 50%;
+  background: var(--warning);
+}
+
+.password-strength-fill.good {
+  width: 75%;
+  background: var(--info);
+}
+
+.password-strength-fill.strong {
+  width: 100%;
+  background: var(--success);
+}
+
+.password-strength-text {
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* Enhanced Field Validation */
+.form-control-traderelay.is-valid {
+  border-color: var(--success);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2310b981' d='m2.3 6.73.94-.94 1.93 1.93 4.29-4.29.94.94-5.23 5.23z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem;
+}
+
+.form-control-traderelay.is-invalid {
+  border-color: var(--danger);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.5 5.5 1 1m0 0 1 1m-1-1 1-1m-1 1-1 1'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .benefits-banner {
+    padding: 1rem 0.5rem;
+  }
+  
+  .benefit-item {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .benefit-item i {
+    font-size: 1.25rem;
+  }
+  
+  .benefit-item:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .benefits-banner .d-flex {
+    flex-direction: column;
+  }
+  
+  .signup-features .d-flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .feature-highlight:not(:last-child) {
+    border-right: none;
+  }
+  
+  .security-notice .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Advanced Animations */
+.auth-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Field Focus Animation */
+.form-control-traderelay:focus + .field-focus-indicator {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.field-focus-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+  opacity: 0;
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Password toggle functionality
+  const passwordToggles = document.querySelectorAll('.password-toggle');
+  
+  passwordToggles.forEach(toggle => {
+    toggle.addEventListener('click', function() {
+      const passwordInput = this.parentElement.querySelector('input');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      const icon = this.querySelector('i');
+      if (type === 'password') {
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    });
+  });
+  
+  // Password strength indicator
+  const passwordFields = document.querySelectorAll('input[type="password"]');
+  
+  passwordFields.forEach(field => {
+    if (field.name.includes('password1') || field.name === 'password') {
+      addPasswordStrengthIndicator(field);
+    }
+  });
+  
+  function addPasswordStrengthIndicator(passwordField) {
+    const strengthContainer = document.createElement('div');
+    strengthContainer.className = 'password-strength';
+    strengthContainer.innerHTML = `
+      <div class="password-strength-bar">
+        <div class="password-strength-fill"></div>
+      </div>
+      <div class="password-strength-text"></div>
+    `;
+    
+    passwordField.parentElement.appendChild(strengthContainer);
+    
+    const strengthFill = strengthContainer.querySelector('.password-strength-fill');
+    const strengthText = strengthContainer.querySelector('.password-strength-text');
+    
+    passwordField.addEventListener('input', function() {
+      const strength = calculatePasswordStrength(this.value);
+      updatePasswordStrength(strengthFill, strengthText, strength);
+    });
+  }
+  
+  function calculatePasswordStrength(password) {
+    let score = 0;
+    let feedback = [];
+    
+    if (password.length >= 8) score += 1;
+    else feedback.push('8+ characters');
+    
+    if (/[a-z]/.test(password)) score += 1;
+    else feedback.push('lowercase letter');
+    
+    if (/[A-Z]/.test(password)) score += 1;
+    else feedback.push('uppercase letter');
+    
+    if (/[0-9]/.test(password)) score += 1;
+    else feedback.push('number');
+    
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+    else feedback.push('special character');
+    
+    return { score, feedback };
+  }
+  
+  function updatePasswordStrength(fillElement, textElement, strength) {
+    const { score, feedback } = strength;
+    
+    fillElement.className = 'password-strength-fill';
+    
+    if (score <= 1) {
+      fillElement.classList.add('weak');
+      textElement.textContent = 'Weak password';
+      textElement.style.color = 'var(--danger)';
+    } else if (score === 2) {
+      fillElement.classList.add('fair');
+      textElement.textContent = 'Fair password';
+      textElement.style.color = 'var(--warning)';
+    } else if (score === 3) {
+      fillElement.classList.add('good');
+      textElement.textContent = 'Good password';
+      textElement.style.color = 'var(--info)';
+    } else if (score >= 4) {
+      fillElement.classList.add('strong');
+      textElement.textContent = 'Strong password';
+      textElement.style.color = 'var(--success)';
+    }
+  }
+  
+  // Real-time field validation
+  const formFields = document.querySelectorAll('.form-control-traderelay');
+  
+  formFields.forEach(field => {
+    field.addEventListener('blur', function() {
+      validateField(this);
+    });
+    
+    field.addEventListener('input', function() {
+      // Remove invalid state while typing
+      this.classList.remove('is-invalid');
+      const errorContainer = this.parentElement.querySelector('.invalid-feedback');
+      if (errorContainer) {
+        errorContainer.style.display = 'none';
+      }
+    });
+  });
+  
+  function validateField(field) {
+    const value = field.value.trim();
+    const fieldName = field.name;
+    
+    // Email validation
+    if (fieldName.includes('email') && value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(value)) {
+        field.classList.add('is-valid');
+        field.classList.remove('is-invalid');
+      } else {
+        field.classList.add('is-invalid');
+        field.classList.remove('is-valid');
+      }
+    }
+    
+    // Required field validation
+    if (field.hasAttribute('required') && !value) {
+      field.classList.add('is-invalid');
+      field.classList.remove('is-valid');
+    } else if (field.hasAttribute('required') && value) {
+      field.classList.add('is-valid');
+      field.classList.remove('is-invalid');
+    }
+  }
+  
+  // Form submission handling
+  const form = document.querySelector('.auth-form');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const termsCheckbox = document.getElementById('terms-agreement');
+  
+  form.addEventListener('submit', function(e) {
+    if (!termsCheckbox.checked) {
+      e.preventDefault();
+      alert('Please agree to the Terms of Service and Privacy Policy to continue.');
+      termsCheckbox.focus();
+      return;
+    }
+    
+    submitButton.disabled = true;
+    submitButton.classList.add('loading');
+    submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Creating Account...';
+    
+    // Re-enable after 15 seconds as fallback
+    setTimeout(() => {
+      submitButton.disabled = false;
+      submitButton.classList.remove('loading');
+      submitButton.innerHTML = '<i class="fa-solid fa-user-plus me-2"></i>Create Account';
+    }, 15000);
+  });
+  
+  // Auto-focus first field
+  const firstInput = form.querySelector('input:not([type="hidden"])');
+  if (firstInput) {
+    firstInput.focus();
+  }
+  
+  // Social button hover effects
+  const socialButtons = document.querySelectorAll('.btn-social');
+  socialButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-1px)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+});
+</script>
+{% endblock %}

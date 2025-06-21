@@ -1,0 +1,106 @@
+<!-- templates/bots/exchanges/create.html -->
+{% extends "base.html" %}
+{% block title %}Add Exchange - TradeRelay{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-traderelay">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
+                    Add New Exchange Account
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label-traderelay">
+                                    <i class="fa-solid fa-tag me-2 fa-traderelay-primary"></i>
+                                    Account Name
+                                </label>
+                                {{ form.name }}
+                                <small class="form-text text-gray-tagline">
+                                    Choose a name to identify this account
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_exchange_type" class="form-label-traderelay">
+                                    <i class="fa-solid fa-building me-2 fa-traderelay-primary"></i>
+                                    Exchange Type
+                                </label>
+                                {{ form.exchange_type }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_credentials" class="form-label-traderelay">
+                            <i class="fa-solid fa-key me-2 fa-traderelay-primary"></i>
+                            API Credentials (JSON)
+                        </label>
+                        <textarea rows="6" class="form-control-traderelay" id="credentials" name="credentials" 
+                            placeholder="{'api_key': 'your-key', 'api_secret': 'your-secret'}" required></textarea>
+                        <!-- <small class="form-text text-gray-tagline">
+                            Example: <code>{"api_key": "your-key", "api_secret": "your-secret"}</code>
+                        </small> -->
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <strong>Security Note:</strong><br>
+                        • Your API credentials are stored securely<br>
+                        • Only create API keys with trading permissions<br>
+                        • Never share API keys with withdrawal permissions<br>
+                        • Test with small amounts first
+                    </div>
+                    
+                    <div class="warning-box">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        <strong>Exchange Setup:</strong><br>
+                        1. Go to your exchange's API settings<br>
+                        2. Create a new API key with trading permissions<br>
+                        3. Copy the API key and secret here<br>
+                        4. Enable IP whitelisting if available
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-traderelay-primary">
+                            <i class="fa-solid fa-plus me-2"></i>Add Exchange Account
+                        </button>
+                        <a href="{% url 'bots:exchange_list' %}" class="btn btn-traderelay-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const button = field.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+{% endblock %}

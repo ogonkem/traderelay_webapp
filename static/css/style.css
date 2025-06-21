@@ -1,0 +1,951 @@
+/* style.css - Custom TradeRelay Styles */
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+   * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
+    color: var(--gray-trade);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }/* ==========================================================================
+     TradeRelay - Modern Trading Platform Styles
+     Works with Bootstrap 5.3+ and Font Awesome 6.5+
+     ========================================================================== */
+  
+  /* CSS Custom Properties (Variables) */
+  :root {
+    /* Brand Colors */
+    --primary-blue: #2563EB;
+    --secondary-blue: #3B82F6;
+    --accent-blue: #3b82f6;
+    --dark-blue: #1e3a8a;
+    --light-blue: #dbeafe;
+    --gray-trade: #1F2937;
+    --white: #fff;
+    
+    /* Gray Scale */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --gray-tagline: #6B7280;
+    
+    /* Status Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: var(--accent-blue);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition: 0.3s ease;
+    --transition-slow: 0.5s ease;
+  }
+  
+  /* ==========================================================================
+     Base Styles
+     ========================================================================== */
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
+    color: var(--gray-trade);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  /* ==========================================================================
+     Navbar Styles
+     ========================================================================== */
+  
+  .navbar-traderelay {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .navbar-traderelay .navbar-brand {
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 1.75rem;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all var(--transition);
+    text-decoration: none;
+  }
+  
+  .navbar-traderelay .navbar-brand:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .navbar-traderelay .navbar-brand .fa-chart-line {
+    background: linear-gradient(45deg, var(--secondary-blue), #34d399);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+  
+  .navbar-traderelay .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.75rem 1rem !important;
+    border-radius: var(--radius-md);
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+  
+  .navbar-traderelay .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    opacity: 0;
+    transition: opacity var(--transition);
+    border-radius: var(--radius-md);
+  }
+  
+  .navbar-traderelay .nav-link:hover::before,
+  .navbar-traderelay .nav-link.active::before {
+    opacity: 1;
+  }
+  
+  .navbar-traderelay .nav-link:hover,
+  .navbar-traderelay .nav-link.active {
+    color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .navbar-traderelay .dropdown-menu {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-xl);
+    border-radius: var(--radius-xl);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .navbar-traderelay .dropdown-item {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--gray-trade);
+  }
+  
+  .navbar-traderelay .dropdown-item:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    transform: translateX(4px);
+  }
+  
+  .navbar-traderelay .dropdown-item.text-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+  }
+  
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.1);
+    transition: all var(--transition);
+  }
+  
+  .navbar-toggler:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+    outline: none;
+  }
+  
+  .navbar-toggler-icon {
+    background-image: none;
+  }
+  
+  /* ==========================================================================
+     Alert Styles (Enhanced Bootstrap alerts)
+     ========================================================================== */
+  
+  .alert {
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .alert::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: currentColor;
+  }
+  
+  .alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+  
+  .alert-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+    color: var(--warning);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  
+  .alert-danger,
+  .alert-error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  .alert-info {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+    color: var(--primary-blue);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  
+  .btn-close {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    transition: all var(--transition-fast);
+  }
+  
+  .btn-close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  
+  /* ==========================================================================
+     Main Content Styles
+     ========================================================================== */
+  
+  main.container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 60vh;
+  }
+  
+  /* ==========================================================================
+     Footer Styles
+     ========================================================================== */
+  
+  .footer-traderelay {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(249, 250, 251, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(229, 231, 235, 0.8);
+    color: var(--gray-tagline);
+    padding: 2rem 0;
+    margin-top: auto;
+    position: relative;
+  }
+  
+  .footer-traderelay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-blue), transparent);
+  }
+  
+  .footer-traderelay .social-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .footer-traderelay .social-links a {
+    color: var(--gray-400);
+    font-size: 1.2rem;
+    transition: all var(--transition);
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+  }
+  
+  .footer-traderelay .social-links a:hover {
+    color: var(--primary-blue);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* ==========================================================================
+     TradeRelay Specific Button Enhancements
+     ========================================================================== */
+  
+  .btn-traderelay-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+    color: var(--white);
+  }
+  
+  .btn-traderelay-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+    color: var(--white);
+  }
+  
+  .btn-traderelay-secondary {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-trade);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all var(--transition);
+  }
+  
+  .btn-traderelay-secondary:hover {
+    background: var(--white);
+    border-color: var(--gray-300);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    color: var(--gray-trade);
+  }
+  
+  /* ==========================================================================
+     TradeRelay Form Enhancements
+     ========================================================================== */
+  
+  .form-control-traderelay {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    transition: all var(--transition-fast);
+    background: var(--white);
+  }
+  
+  .form-control-traderelay:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    outline: none;
+  }
+  
+  .form-label-traderelay {
+    font-weight: 500;
+    color: var(--gray-trade);
+    margin-bottom: 0.5rem;
+  }
+  
+  /* ==========================================================================
+     TradeRelay Card Enhancements
+     ========================================================================== */
+  
+  .card-traderelay {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+  }
+  
+  .card-traderelay:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  
+  .card-traderelay .card-header {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    color: var(--gray-trade);
+  }
+  
+  .card-traderelay .card-body {
+    padding: 1.5rem;
+  }
+  
+  /* ==========================================================================
+     Animation Classes
+     ========================================================================== */
+  
+  .fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Loading Animation */
+  .loading-shimmer {
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.1) 25%, 
+      rgba(255, 255, 255, 0.3) 50%, 
+      rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* Ripple Effect */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+  }
+  
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+  
+  /* ==========================================================================
+     Utility Classes
+     ========================================================================== */
+  
+  .text-primary-blue {
+    color: var(--primary-blue) !important;
+  }
+  
+  .text-secondary-blue {
+    color: var(--secondary-blue) !important;
+  }
+  
+  .text-gray-trade {
+    color: var(--gray-trade) !important;
+  }
+  
+  .text-gray-tagline {
+    color: var(--gray-tagline) !important;
+  }
+  
+  .bg-primary-blue {
+    background-color: var(--primary-blue) !important;
+  }
+  
+  .bg-secondary-blue {
+    background-color: var(--secondary-blue) !important;
+  }
+  
+  /* ==========================================================================
+     Font Awesome Icon Enhancements
+     ========================================================================== */
+  
+  .fa-traderelay-primary {
+    color: var(--primary-blue);
+  }
+  
+  .fa-traderelay-secondary {
+    color: var(--secondary-blue);
+  }
+  
+  .fa-traderelay-success {
+    color: var(--success);
+  }
+  
+  .fa-traderelay-warning {
+    color: var(--warning);
+  }
+  
+  .fa-traderelay-danger {
+    color: var(--danger);
+  }
+  
+  .icon-hover {
+    transition: all var(--transition);
+  }
+  
+  .icon-hover:hover {
+    transform: scale(1.1);
+  }
+  
+  .icon-spin-on-hover {
+    transition: transform var(--transition);
+  }
+  
+  .icon-spin-on-hover:hover {
+    transform: rotate(360deg);
+  }
+  
+  /* Icon backgrounds for badges/pills */
+  .icon-bg-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  /* ==========================================================================
+     Accessibility & Focus States
+     ========================================================================== */
+  
+  .navbar-traderelay .nav-link:focus,
+  .navbar-traderelay .navbar-brand:focus,
+  .navbar-traderelay .dropdown-item:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+  
+  .btn:focus,
+  .btn-traderelay-primary:focus,
+  .btn-traderelay-secondary:focus {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+  }
+  
+  .form-control:focus,
+  .form-control-traderelay:focus {
+    outline: none;
+  }
+  
+  /* ==========================================================================
+     Responsive Design
+     ========================================================================== */
+  
+  @media (max-width: 768px) {
+    .navbar-traderelay .navbar-brand {
+      font-size: 1.5rem;
+    }
+  
+    main.container {
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+    }
+  
+    .alert {
+      padding: 0.75rem 1rem;
+    }
+  
+    .footer-traderelay {
+      padding: 1.5rem 0;
+    }
+  
+    .btn {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    main.container {
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+  
+    .navbar-traderelay .navbar-brand {
+      font-size: 1.25rem;
+    }
+  }
+  
+  /* ==========================================================================
+     Print Styles
+     ========================================================================== */
+  
+  @media print {
+    .navbar-traderelay,
+    .footer-traderelay {
+      display: none;
+    }
+  
+    main.container {
+      background: white;
+      box-shadow: none;
+      border: none;
+    }
+  
+    .alert {
+      background: white !important;
+      border: 1px solid #ccc !important;
+      color: black !important;
+    }
+  }
+
+/* Auth Section Styles (Login & Signup) */
+.auth-section {
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.auth-card {
+  border: none;
+  border-radius: var(--radius-2xl);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: var(--radius-2xl);
+  pointer-events: none;
+}
+
+.btn-social {
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  color: var(--gray-trade);
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+  text-decoration: none;
+  display: block;
+}
+
+.btn-social:hover {
+  border-color: var(--primary-blue);
+  background: var(--light-blue);
+  color: var(--gray-trade);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-social:active {
+  transform: translateY(0);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.divider-text {
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.auth-form {
+  position: relative;
+  z-index: 1;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-label-traderelay {
+  font-weight: 500;
+  color: var(--gray-trade);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control-traderelay {
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  background: var(--white);
+  width: 100%;
+}
+
+.form-control-traderelay:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+  outline: none;
+}
+
+.form-control-traderelay.is-invalid {
+  border-color: var(--danger);
+}
+
+.input-group .form-control-traderelay {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color var(--transition-fast);
+}
+
+.input-group .password-toggle {
+  position: static;
+  transform: none;
+  margin-left: -2.5rem;
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  color: var(--primary-blue);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+.forgot-password-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.forgot-password-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.sso-link {
+  color: var(--gray-tagline);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.sso-link:hover {
+  color: var(--primary-blue);
+}
+
+.signup-prompt {
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+}
+
+.signup-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.signup-link:hover {
+  color: var(--secondary-blue);
+  text-decoration: underline;
+}
+
+.trust-indicators {
+  animation: fadeIn 1s ease-out 0.5s both;
+}
+
+.btn-traderelay-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-traderelay-primary.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn-traderelay-primary.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .auth-section {
+    padding: 2rem 0;
+  }
+  .auth-card .card-body {
+    padding: 2rem 1.5rem;
+  }
+  .divider-text {
+    font-size: 0.8rem;
+  }
+  .trust-indicators {
+    margin-top: 2rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-form input:focus,
+.auth-form button:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.auth-form input:focus {
+  outline: none; /* Handled by box-shadow */
+}
+
+.info-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-left: 4px solid #2563eb;
+  color: #2563eb;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.warning-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-left: 4px solid #f59e0b;
+  color: #b45309;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}

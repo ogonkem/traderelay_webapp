@@ -1,0 +1,188 @@
+<!-- templates/bots/exchange_confirm_delete.html -->
+{% extends "base.html" %}
+{% block title %}Delete {{ exchange.name }} - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-traderelay">
+            <div class="card-header">
+                <h5 class="mb-0 text-danger">
+                    <i class="fa-solid fa-trash me-2"></i>
+                    Delete Exchange Account
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                    <strong>Danger Zone:</strong> This action cannot be undone.
+                </div>
+                
+                <p>Are you sure you want to delete the exchange account <strong>"{{ exchange.name }}"</strong>?</p>
+                
+                <div class="mb-3">
+                    <small class="text-gray-tagline">Exchange Details:</small>
+                    <ul class="mt-2">
+                        <li><strong>Name:</strong> {{ exchange.name }}</li>
+                        <li><strong>Type:</strong> {{ exchange.get_exchange_type_display }}</li>
+                        <li><strong>Created:</strong> {{ exchange.created_at|date:"M d, Y" }}</li>
+                        <li><strong>Last Updated:</strong> {{ exchange.updated_at|timesince }} ago</li>
+                    </ul>
+                </div>
+                
+                <p class="text-gray-tagline">
+                    This will permanently delete the exchange account and all associated logs. 
+                    Any bots using this exchange will be affected.
+                </p>
+                
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash me-2"></i>Delete Exchange Account
+                    </button>
+                    <a href="{% url 'bots:exchange_list' %}" class="btn btn-traderelay-secondary">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% extends "base.html" %}
+{% block title %}My Exchanges - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-gray-trade">My Exchange Accounts</h2>
+    <a href="{% url 'bots:exchange_create' %}" class="btn btn-traderelay-primary">
+        <i class="fa-solid fa-plus me-2"></i>Add Exchange
+    </a>
+</div>
+
+{% if exchanges %}
+    <div class="row g-4">
+        {% for exchange in exchanges %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-traderelay h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title text-gray-trade">{{ exchange.name }}</h5>
+                        <span class="badge {% if exchange.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                            {% if exchange.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fa-solid fa-building me-2 fa-traderelay-primary"></i>
+                            <small class="text-gray-tagline">Exchange Type:</small>
+                        </div>
+                        <div class="fw-bold text-primary-blue">{{ exchange.get_exchange_type_display }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-gray-tagline">API Key:</small>
+                        <div class="input-group mt-1">
+                            <input type="password" class="form-control form-control-sm" 
+                                   value="{{ exchange.api_key }}" readonly>
+                            <button class="btn btn-outline-secondary btn-sm" type="button" 
+                                    onclick="toggleApiKey(this)">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <small class="text-gray-tagline">Connected Bots</small>
+                            <div class="fw-bold text-primary-blue">{{ exchange.bots.count }}</div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-gray-tagline">Last Test</small>
+                            <div class="fw-bold text-primary-blue">
+                                {% if exchange.last_test_at %}
+                                    {{ exchange.last_test_at|timesince }} ago
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2 mb-2">
+                        <a href="{% url 'bots:update_exchange' exchange.pk %}" class="btn btn-traderelay-secondary btn-sm flex-fill">
+                            <i class="fa-solid fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'bots:exchange_logs' exchange.pk %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fa-solid fa-list"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-success btn-sm flex-fill" onclick="testConnection({{ exchange.pk }})">
+                            <i class="fa-solid fa-plug me-1"></i>Test Connection
+                        </button>
+                        <a href="{% url 'bots:delete_exchange' exchange.pk %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <div class="icon-bg-primary mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: 1.5rem;">
+            <i class="fa-solid fa-building"></i>
+        </div>
+        <h4 class="text-gray-trade mb-2">No Exchange Accounts Yet</h4>
+        <p class="text-gray-tagline mb-4">Add your first exchange account to start trading.</p>
+        <a href="{% url 'bots:exchange_create' %}" class="btn btn-traderelay-primary">
+            <i class="fa-solid fa-plus me-2"></i>Add Your First Exchange
+        </a>
+    </div>
+{% endif %}
+
+<script>
+function toggleApiKey(button) {
+    const input = button.parentElement.querySelector('input');
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+function testConnection(exchangeId) {
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    
+    // Show loading state
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Testing...';
+    
+    // Simulate API test (you can replace with actual AJAX call)
+    setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fa-solid fa-check me-1"></i>Connected!';
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-success');
+        
+        // Reset after 3 seconds
+        setTimeout(() => {
+            button.innerHTML = originalContent;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-success');
+        }, 3000);
+    }, 2000);
+}
+</script>
+{% endblock %}

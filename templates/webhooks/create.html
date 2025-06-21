@@ -1,0 +1,61 @@
+<!-- templates/webhooks/create.html -->
+{% extends "base.html" %}
+{% block title %}Create Webhook - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-traderelay">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
+                    Create New Webhook
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label-traderelay">
+                            <i class="fa-solid fa-tag me-2 fa-traderelay-primary"></i>
+                            Webhook Name
+                        </label>
+                        <input type="text" class="form-control-traderelay" id="name" name="name" 
+                               placeholder="e.g., BTC Scalping Strategy" required>
+                        <small class="form-text text-gray-tagline">
+                            Choose a descriptive name for your webhook
+                        </small>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <strong>How to use:</strong><br>
+                        1. Create this webhook<br>
+                        2. Copy the generated URL<br>
+                        3. Paste it in your TradingView alert's webhook URL field<br>
+                        4. Use this JSON format in your alert message:
+                        <pre class="mt-2 mb-0"><code>{
+  "type": "Market",
+  "side": "Buy",
+  "amount": "10",
+  "symbol": "BTCUSD",
+  "takeProfit": "5",
+  "stopLoss": "3",
+  "key": "will_be_generated"
+}</code></pre>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-traderelay-primary">
+                            <i class="fa-solid fa-plus me-2"></i>Create Webhook
+                        </button>
+                        <a href="{% url 'bots:webhook_list' %}" class="btn btn-traderelay-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

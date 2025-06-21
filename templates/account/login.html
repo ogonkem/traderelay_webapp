@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Sign In - TradeRelay{% endblock %}
+
+{% block content %}
+<section class="auth-section bg-white">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-75">
+      <div class="col-md-6 col-lg-5 col-xl-4">
+        <!-- Login Card -->
+        <div class="card card-traderelay auth-card shadow-lg">
+          <div class="card-body p-4 p-md-5">
+            <!-- Header -->
+            <div class="text-center mb-4">
+              <div class="icon-bg-primary mx-auto mb-3" style="width: 3.5rem; height: 3.5rem; font-size: 1.3rem;">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <h2 class="fw-bold text-gray-trade mb-2">Welcome Back</h2>
+              <p class="text-gray-tagline">Sign in to your TradeRelay account</p>
+            </div>
+
+            <!-- Social Login Section -->
+            {% if socialaccount_providers %}
+              <div class="social-login mb-4">
+                {% for provider in socialaccount_providers %}
+                  <a class="btn btn-social w-100 mb-2" href="{{ provider.login_url }}">
+                    <div class="d-flex align-items-center justify-content-center">
+                      {% if provider.id == 'google' %}
+                        <i class="fab fa-google me-3" style="color:#ea4335;"></i>
+                      {% elif provider.id == 'microsoft' %}
+                        <i class="fab fa-microsoft me-3" style="color:#0078d4;"></i>
+                      {% elif provider.id == 'github' %}
+                        <i class="fab fa-github me-3" style="color:#333;"></i>
+                      {% else %}
+                        <i class="fa-solid fa-user me-3"></i>
+                      {% endif %}
+                      <span>Continue with {{ provider.name }}</span>
+                    </div>
+                  </a>
+                {% endfor %}
+                
+                <!-- Divider -->
+                <div class="divider">
+                  <div class="divider-line"></div>
+                  <span class="divider-text text-gray-tagline">or sign in with email</span>
+                  <div class="divider-line"></div>
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Login Form -->
+            <form method="post" action="{% url 'account_login' %}" class="auth-form">
+              {% csrf_token %}
+              
+              <!-- Non-field errors -->
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                  <div class="d-flex align-items-start">
+                    <i class="fa-solid fa-circle-exclamation fa-traderelay-danger me-2 mt-1"></i>
+                    <div>
+                      {% for error in form.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+
+              <!-- Email Field -->
+              <div class="form-group mb-3">
+                <label class="form-label-traderelay" for="id_login">
+                  <i class="fa-solid fa-envelope me-2 fa-traderelay-primary"></i>
+                  Email Address
+                </label>
+                {{ form.login|add_class:"form-control-traderelay"|attr:"placeholder:Enter your email address"|attr:"autocomplete:email" }}
+                {% if form.login.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.login.errors %}
+                      <small class="text-danger">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}
+                      </small>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Password Field -->
+              <div class="form-group mb-3">
+                <label class="form-label-traderelay" for="id_password">
+                  <i class="fa-solid fa-lock me-2 fa-traderelay-primary"></i>
+                  Password
+                </label>
+                <div class="password-input-group">
+                  {{ form.password|add_class:"form-control-traderelay"|attr:"placeholder:Enter your password"|attr:"autocomplete:current-password" }}
+                  <button type="button" class="password-toggle" tabindex="-1">
+                    <i class="fa-solid fa-eye fa-traderelay-primary"></i>
+                  </button>
+                </div>
+                {% if form.password.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.password.errors %}
+                      <small class="text-danger">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}
+                      </small>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Remember Me & Forgot Password -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  {{ form.remember|add_class:"form-check-input" }}
+                  <label class="form-check-label text-gray-tagline" for="{{ form.remember.id_for_label }}">
+                    Remember me
+                  </label>
+                </div>
+                <a href="{% url 'account_reset_password' %}" class="forgot-password-link">
+                  Forgot password?
+                </a>
+              </div>
+
+              <!-- Submit Button -->
+              <button class="btn btn-traderelay-primary w-100 mb-3" type="submit">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>
+                Sign In
+              </button>
+
+              <!-- Additional Links -->
+              <div class="auth-links text-center">
+                <div class="mb-3">
+                  <a href="#" class="sso-link">
+                    <i class="fa-solid fa-building me-2"></i>
+                    Sign in with SSO
+                  </a>
+                </div>
+                <div class="signup-prompt">
+                  <span class="text-gray-tagline">Don't have an account?</span>
+                  <a href="{% url 'account_signup' %}" class="signup-link">
+                    Sign up for free
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="trust-indicators text-center mt-4">
+          <div class="row g-2 text-center">
+            <div class="col-4">
+              <small class="text-gray-tagline">
+                <i class="fa-solid fa-shield-check fa-traderelay-success me-1"></i>
+                Secure
+              </small>
+            </div>
+            <div class="col-4">
+              <small class="text-gray-tagline">
+                <i class="fa-solid fa-lock fa-traderelay-success me-1"></i>
+                Encrypted
+              </small>
+            </div>
+            <div class="col-4">
+              <small class="text-gray-tagline">
+                <i class="fa-solid fa-users fa-traderelay-success me-1"></i>
+                Trusted
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Password toggle functionality
+  const passwordToggle = document.querySelector('.password-toggle');
+  const passwordInput = document.querySelector('input[type="password"]');
+  
+  if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      const icon = this.querySelector('i');
+      if (type === 'password') {
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    });
+  }
+  
+  // Form submission loading state
+  const form = document.querySelector('.auth-form');
+  const submitButton = form.querySelector('button[type="submit"]');
+  
+  form.addEventListener('submit', function() {
+    submitButton.disabled = true;
+    submitButton.classList.add('loading');
+    
+    // Re-enable after 10 seconds as fallback
+    setTimeout(() => {
+      submitButton.disabled = false;
+      submitButton.classList.remove('loading');
+    }, 10000);
+  });
+  
+  // Auto-focus first input
+  const firstInput = form.querySelector('input:not([type="hidden"])');
+  if (firstInput) {
+    firstInput.focus();
+  }
+  
+  // Social login hover effects
+  const socialButtons = document.querySelectorAll('.btn-social');
+  socialButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-1px)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+});
+</script>
+{% endblock %}

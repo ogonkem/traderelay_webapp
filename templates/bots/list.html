@@ -1,0 +1,155 @@
+<!-- templates/bots/list.html -->
+{% extends "base.html" %}
+{% block title %}My Trading Bots - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-gray-trade">My Trading Bots</h2>
+    <a href="{% url 'bots:create_bot' %}" class="btn btn-traderelay-primary">
+        <i class="fa-solid fa-plus me-2"></i>Create Bot
+    </a>
+</div>
+
+{% if bots %}
+    <div class="row g-4">
+        {% for bot in bots %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-traderelay h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title text-gray-trade">{{ bot.name }}</h5>
+                        {% if bot.is_active %}
+                            <span class="badge bg-success">
+                                <i class="fa-solid fa-play me-1"></i>Running
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="fa-solid fa-pause me-1"></i>Stopped
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fa-solid fa-chart-line me-2 fa-traderelay-primary"></i>
+                            <small class="text-gray-tagline">Strategy:</small>
+                        </div>
+                        <div class="fw-bold text-primary-blue">{{ bot.strategy }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fa-solid fa-building me-2 fa-traderelay-primary"></i>
+                            <small class="text-gray-tagline">Exchange:</small>
+                        </div>
+                        <div class="fw-bold text-primary-blue">{{ bot.exchange.name }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fa-solid fa-coins me-2 fa-traderelay-primary"></i>
+                            <small class="text-gray-tagline">Symbol:</small>
+                        </div>
+                        <div class="fw-bold">
+                            <code class="text-primary-blue">{{ bot.symbol }}</code>
+                        </div>
+                    </div>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <small class="text-gray-tagline">Created</small>
+                            <div class="fw-bold text-primary-blue">{{ bot.created_at|date:"M d" }}</div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-gray-tagline">Updated</small>
+                            <div class="fw-bold text-primary-blue">{{ bot.updated_at|timesince }} ago</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2 mb-2">
+                        <a href="{% url 'bots:bot_detail' bot.id %}" class="btn btn-traderelay-secondary btn-sm flex-fill">
+                            <i class="fa-solid fa-eye me-1"></i>View
+                        </a>
+                        <a href="{% url 'bots:edit_bot' bot.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fa-solid fa-edit"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        {% if bot.is_active %}
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="stopBot({{ bot.id }})">
+                                <i class="fa-solid fa-pause me-1"></i>Stop Bot
+                            </button>
+                        {% else %}
+                            <button class="btn btn-outline-success btn-sm flex-fill" onclick="startBot({{ bot.id }})">
+                                <i class="fa-solid fa-play me-1"></i>Start Bot
+                            </button>
+                        {% endif %}
+                        <a href="{% url 'bots:delete_bot' bot.id %}" class="btn btn-outline-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <div class="icon-bg-primary mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: 1.5rem;">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+        <h4 class="text-gray-trade mb-2">No Trading Bots Yet</h4>
+        <p class="text-gray-tagline mb-4">Create your first trading bot to start automated trading.</p>
+        <a href="{% url 'bots:create_bot' %}" class="btn btn-traderelay-primary">
+            <i class="fa-solid fa-plus me-2"></i>Create Your First Bot
+        </a>
+    </div>
+{% endif %}
+
+<script>
+function startBot(botId) {
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    
+    // Show loading state
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Starting...';
+    
+    // Simulate bot start (replace with actual AJAX call)
+    setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fa-solid fa-check me-1"></i>Started!';
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-success');
+        
+        // Reset after 2 seconds and redirect
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }, 1500);
+}
+
+function stopBot(botId) {
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    
+    // Show loading state
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i>Stopping...';
+    
+    // Simulate bot stop (replace with actual AJAX call)
+    setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fa-solid fa-check me-1"></i>Stopped!';
+        button.classList.remove('btn-outline-warning');
+        button.classList.add('btn-secondary');
+        
+        // Reset after 2 seconds and redirect
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }, 1500);
+}
+</script>
+{% endblock %}

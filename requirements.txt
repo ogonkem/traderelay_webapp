@@ -1,0 +1,44 @@
+# Django and Core Dependencies
+Django==4.2.21
+python-decouple==3.8
+django-environ==0.11.2
+
+# Database
+psycopg2-binary==2.9.9
+django-redis==5.4.0
+
+# Authentication
+django-allauth==0.54.0
+django-extensions==3.2.3
+
+# Task Queue
+celery==5.3.6
+redis==5.0.1
+
+# API and Webhooks
+requests==2.31.0
+stripe==7.11.0
+
+# Trading APIs
+pybit==5.6.0
+alpaca-trade-api==3.0.2
+
+# Development Tools
+black==23.12.1
+flake8==7.0.0
+pytest==7.4.4
+pytest-django==4.7.0
+
+# Production
+gunicorn==21.2.0
+whitenoise==6.6.0
+django-storages==1.14.2
+
+# Monitoring and Logging
+sentry-sdk==1.39.1
+django-debug-toolbar==4.2.0
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+Pillow==10.2.0 

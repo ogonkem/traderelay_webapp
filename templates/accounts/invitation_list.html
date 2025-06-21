@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Team Invitations{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Team Invitations
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                Manage your sent invitations.
+            </p>
+        </div>
+        <a href="{% url 'accounts:send_invitation' %}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Send New Invitation
+        </a>
+    </div>
+    <div class="border-t border-gray-200">
+        {% if invitations %}
+            <ul class="divide-y divide-gray-200">
+                {% for invitation in invitations %}
+                    <li class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ invitation.email }}
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Role: {{ invitation.role|title }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if invitation.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif invitation.status == 'accepted' %}bg-green-100 text-green-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ invitation.status|title }}
+                                </span>
+                                {% if invitation.status == 'pending' %}
+                                    <a href="{% url 'accounts:cancel_invitation' invitation.invitation_id %}"
+                                       class="text-red-600 hover:text-red-900"
+                                       onclick="return confirm('Are you sure you want to cancel this invitation?')">
+                                        Cancel
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if invitation.message %}
+                            <div class="mt-2 text-sm text-gray-500">
+                                Message: {{ invitation.message }}
+                            </div>
+                        {% endif %}
+                        <div class="mt-2 text-xs text-gray-500">
+                            Sent: {{ invitation.created_at|date:"M d, Y H:i" }}
+                            {% if invitation.status == 'pending' %}
+                                | Expires: {{ invitation.expires_at|date:"M d, Y H:i" }}
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="px-4 py-5 sm:px-6 text-center text-gray-500">
+                No invitations sent yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

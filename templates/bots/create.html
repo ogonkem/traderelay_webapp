@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Create Bot - TradeRelay{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-traderelay">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fa-solid fa-robot me-2 fa-traderelay-primary"></i>
+                    Create New Trading Bot
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label-traderelay">
+                            <i class="fa-solid fa-tag me-2 fa-traderelay-primary"></i>
+                            Bot Name
+                        </label>
+                        {{ form.name }}
+                        <small class="form-text text-gray-tagline">
+                            Choose a descriptive name for your bot
+                        </small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_exchange" class="form-label-traderelay">
+                                    <i class="fa-solid fa-building me-2 fa-traderelay-primary"></i>
+                                    Exchange Account
+                                </label>
+                                {{ form.exchange }}
+                                <small class="form-text text-gray-tagline">
+                                    Select your connected exchange account
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_webhook" class="form-label-traderelay">
+                                    <i class="fa-solid fa-link me-2 fa-traderelay-primary"></i>
+                                    Webhook Configuration
+                                </label>
+                                {{ form.webhook }}
+                                <small class="form-text text-gray-tagline">
+                                    Choose webhook for signal processing
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <strong>Trading Bot Setup:</strong><br>
+                        • Give your bot a clear, descriptive name<br>
+                        • Select an exchange account with sufficient balance<br>
+                        • Choose the appropriate webhook for signal processing<br>
+                        • Ensure your exchange API permissions are properly configured
+                    </div>
+                    
+                    <div class="warning-box">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        <strong>Important:</strong><br>
+                        • Bots will execute trades automatically based on webhook signals<br>
+                        • Monitor your bot's performance regularly<br>
+                        • Ensure your exchange account has appropriate risk settings<br>
+                        • Never risk more than you can afford to lose
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-traderelay-primary">
+                            <i class="fa-solid fa-robot me-2"></i>Create Trading Bot
+                        </button>
+                        <a href="{% url 'bots:bot_list' %}" class="btn btn-traderelay-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

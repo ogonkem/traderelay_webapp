@@ -1,0 +1,548 @@
+================================================================================
+                    SOFTWARE SPECIFICATION REQUIREMENTS (SSR) DOCUMENT
+================================================================================
+
+Project Title: TradeRelay - Team-Based TradingView Webhook Automation Platform
+
+Document Version: 2.0
+Last Updated: December 2024
+Target Audience: Development Team, Stakeholders
+Status: Ready for Development
+
+================================================================================
+                                   OBJECTIVE
+================================================================================
+
+To develop a secure, team-focused web application that listens to webhook alerts 
+from TradingView and executes trades on platforms such as Bybit (crypto), 
+Binance (crypto), and Alpaca (stocks), designed for small trading teams of 4-10 
+members with comprehensive analytics and admin controls.
+
+================================================================================
+                               1. TECHNOLOGY STACK
+================================================================================
+
+Frontend:
+• HTML5, CSS3, JavaScript
+• Bootstrap 5
+• Chart.js for analytics and charts
+
+Backend:
+• Django 4.x (Python)
+• Django-allauth for authentication and social login
+• Django-extensions for enhanced functionality
+
+Trading API Integrations:
+• Bybit via `pybit` (crypto trading)
+• Binance via `python-binance` (crypto trading)
+• Alpaca Markets via `alpaca-py` (US stocks/ETFs)
+
+Data Storage:
+• PostgreSQL (Relational Database)
+• Redis (Caching and session management)
+
+Deployment:
+• Docker
+• Azure App Service
+• Azure Database for PostgreSQL
+• Azure Key Vault for API credentials
+
+================================================================================
+                          2. TEAM-BASED ACCESS MODEL
+================================================================================
+
+Team Structure:
+• Maximum 10 users per TradeRelay instance
+• Invite-only registration with admin approval
+• Role-based access (Admin, Trader)
+• Individual user limits and permissions
+
+User Limits (Per Trader):
+• 10 webhook endpoints per user
+• 1,000 trades per day per user
+• Full platform access (Bybit + Binance + Alpaca)
+• 365-day analytics retention
+
+Admin Controls:
+• User approval/suspension
+• Individual limit management
+• Team-wide settings
+• Platform enable/disable
+• Analytics oversight
+
+================================================================================
+                              3. CORE FEATURES
+================================================================================
+
+A. Team User Management
+• Django-allauth for email/password and social login (Google, GitHub)
+• Invitation system with UUID-based secure links
+• Admin approval workflow for new members
+• User profiles with trading statistics and preferences
+• Session tracking and activity monitoring
+
+B. Advanced Webhook Management
+• Multiple webhook endpoints per user (up to 10)
+• Custom webhook naming and organization
+• Individual webhook analytics and usage tracking
+• Platform-specific routing (Bybit/Binance/Alpaca)
+• Webhook testing tools and validation
+
+C. Multi-Platform Trade Execution
+• Bybit: Crypto spot & derivatives trading (BTC, ETH, altcoins)
+• Binance: Crypto spot & futures trading (largest crypto volume)
+• Alpaca: US stocks and ETFs during market hours
+• Market and limit orders support across all platforms
+• Platform-specific error handling and logging
+• Real-time execution monitoring and status tracking
+
+D. Advanced Analytics & Performance Tracking
+• Chart.js Integration: Interactive performance charts
+• Individual Trader Analytics:
+  - Personal equity curves
+  - Win/loss ratios and statistics
+  - Platform comparison (Bybit vs Binance vs Alpaca)
+  - Trading session analysis
+• Team-Wide Analytics:
+  - Combined team performance
+  - Platform usage statistics
+  - Top performers dashboard
+  - Risk management metrics
+
+E. Comprehensive Admin Panel
+• User Management: Approve, suspend, manage limits
+• System Monitoring: API status, webhook success rates
+• Team Analytics: Platform-wide performance metrics
+• Settings Management: Team configuration and limits
+• Activity Oversight: Real-time trading monitoring
+
+================================================================================
+                             4. DATABASE SCHEMA
+================================================================================
+
+User Management Models:
+
+UserProfile:
+- user (OneToOne with Django User)
+- status (pending, active, suspended, inactive)
+- avatar (ImageField)
+- max_webhooks (default: 10)
+- max_daily_trades (default: 1000)
+- preferred_platforms (JSONField)
+- total_trades, successful_trades
+- last_trade_at, last_active
+
+UserInvitation:
+- invitation_id (UUID)
+- email
+- invited_by (ForeignKey)
+- status (pending, accepted, expired)
+- expires_at
+- role, message
+
+TradingSession:
+- user (ForeignKey)
+- session_id (UUID)
+- started_at, ended_at
+- trades_count
+- platforms_used (JSONField)
+- total_pnl, best_trade, worst_trade
+
+Webhook & Trading Models:
+
+WebhookEndpoint:
+- user (ForeignKey)
+- webhook_id (UUID)
+- name (CharField: user-defined)
+- secret_key (CharField)
+- is_active (BooleanField)
+- platform_config (JSONField)
+- usage_count, last_used
+
+Trade:
+- user (ForeignKey)
+- webhook_endpoint (ForeignKey)
+- platform (bybit/binance/alpaca)
+- symbol, side, quantity, price
+- status (success/failed)
+- profit_loss (DecimalField)
+- execution_time, timestamp
+
+Analytics:
+- user (ForeignKey)
+- metric_type, period
+- value (DecimalField)
+- calculated_at
+
+Team Settings Model:
+
+TeamSettings:
+- team_name (CharField)
+- max_team_size (default: 10)
+- require_admin_approval (BooleanField)
+- enabled_platforms (JSONField)
+- default_limits (JSONField)
+- notification_settings (JSONField)
+- analytics_retention_days (365)
+
+================================================================================
+                       5. PAGE STRUCTURE & USER INTERFACE
+================================================================================
+
+1. Landing Page
+• Team-focused branding and messaging
+• Secure login with social authentication
+• Invitation access for new members
+• Platform overview and benefits
+
+2. User Dashboard
+• Personal Performance Overview: Key metrics and charts
+• Recent Trading Activity: Latest trades and webhook calls
+• Quick Actions: Create webhook, view analytics, team stats
+• Session Status: Current trading session information
+• Platform Health: Bybit/Binance/Alpaca status indicators
+
+3. Team Dashboard
+• Team Performance Summary: Combined analytics and metrics
+• Member Activity Feed: Real-time team trading activity
+• Leaderboard: Top performers and statistics
+• Platform Usage: Team-wide platform utilization
+• System Alerts: Important notifications and updates
+
+4. Webhook Management Hub
+• Webhook Directory: All user's endpoints with status/stats
+• Create/Edit Interface: Platform-specific configuration
+• Testing Suite: Webhook validation and debugging tools
+• Usage Analytics: Performance metrics per webhook
+• Integration Guides: TradingView setup instructions
+
+5. Advanced Analytics Center
+• Individual Performance:
+  - Interactive equity curves with Chart.js
+  - Win/loss analysis and statistics
+  - Platform comparison (Bybit vs Binance vs Alpaca)
+  - Session-based performance tracking
+  - Risk metrics and drawdown analysis
+• Team Analytics:
+  - Combined team performance dashboard
+  - Member comparison and rankings
+  - Platform utilization statistics
+  - Risk exposure and portfolio analysis
+
+6. Profile & Settings
+• User Profile Management: Avatar, preferences, bio
+• Trading Preferences: Platform settings, risk levels
+• Notification Settings: Email alerts and preferences
+• API Credentials: Secure credential management
+• Account Security: Password, 2FA, session management
+
+7. Admin Control Panel
+• User Management Dashboard: Approve, suspend, manage members
+• System Health Monitor: API status, webhook success rates
+• Team Configuration: Settings, limits, platform controls
+• Analytics Overview: Platform-wide performance metrics
+• Activity Logs: Comprehensive audit trails
+• Notification Center: System alerts and user communications
+
+================================================================================
+                        6. SECURITY & ACCESS CONTROL
+================================================================================
+
+Authentication & Authorization:
+• Django-allauth with social login (Google, GitHub)
+• Invite-only registration with email verification
+• Admin approval workflow for new members
+• Role-based permissions (Admin, Trader)
+• Session management and security
+
+API Security:
+• Webhook secret key verification
+• Rate limiting per user and endpoint
+• API credential encryption (Azure Key Vault)
+• HTTPS enforcement with SSL/TLS
+• Request validation and sanitization
+
+Data Protection:
+• User data encryption at rest
+• Secure credential storage
+• Audit logging for all actions
+• Privacy controls and data retention
+• GDPR compliance considerations
+
+================================================================================
+                      7. AZURE DEPLOYMENT ARCHITECTURE
+================================================================================
+
+Architecture Diagram:
+
+┌─────────────────┐    ┌──────────────────────┐    ┌─────────────────┐
+│   TradingView   │───▶│   Azure App Service  │◀──▶│  Team Members   │
+│   Webhooks      │    │   (TradeRelay App)   │    │   (4-10 users)  │
+└─────────────────┘    └──────────────────────┘    └─────────────────┘
+                                  │
+        ┌─────────────────────────┼─────────────────────────┐
+        │                         │                         │
+┌───────▼────────┐    ┌──────────▼──────────┐    ┌─────────▼────────┐
+│   Bybit API    │    │   Binance API       │    │   Alpaca API     │
+│   (Crypto)     │    │   (Crypto)          │    │   (US Stocks)    │
+└────────────────┘    └─────────────────────┘    └──────────────────┘
+                                  │
+                        ┌─────────▼────────┐
+                        │ Azure PostgreSQL │
+                        │   (Database)     │
+                        └──────────────────┘
+                                  │
+                        ┌─────────▼────────┐
+                        │ Azure Key Vault  │
+                        │ (API Credentials)│
+                        └──────────────────┘
+
+Azure Services:
+• Azure App Service: Django web application hosting
+• Azure Database for PostgreSQL: User data and trading records
+• Azure Key Vault: Secure API credential storage
+• Azure Monitor: Logging, monitoring, and alerting
+• Azure CDN: Static asset delivery (optional)
+
+================================================================================
+                        8. TEAM MANAGEMENT FEATURES
+================================================================================
+
+User Onboarding Flow:
+1. Admin sends invitation via email
+2. User receives secure invitation link (UUID-based)
+3. User registers with email/social login
+4. Admin reviews and approves new member
+5. User gains access with configured limits
+6. Personalized dashboard and webhook setup
+
+Admin Controls:
+• User Approval/Rejection: Review pending registrations
+• Permission Management: Adjust individual user limits
+• Activity Monitoring: Real-time user activity oversight
+• System Configuration: Team-wide settings and controls
+• Analytics Access: Comprehensive team performance data
+
+Team Collaboration:
+• Shared Analytics: Team performance dashboards
+• Activity Feeds: Real-time trading activity visibility
+• Performance Leaderboards: Friendly competition metrics
+• Knowledge Sharing: Best practices and strategy discussions
+
+================================================================================
+                   9. DEVELOPMENT TIMELINE (28 DAYS - KANBAN)
+================================================================================
+
+Week 1: Foundation & User Management (Days 1-7)
+-------------------------------------------------
+Day 1: Django project setup + Azure PostgreSQL config           [⏳ To Do]
+Day 2: Django-allauth + social login (Google, GitHub)          [⏳ To Do]
+Day 3: User models (Profile, Invitation, TeamSettings)         [⏳ To Do]
+Day 4: Invitation system + email notifications                 [⏳ To Do]
+Day 5: Admin approval workflow + user management               [⏳ To Do]
+Day 6: Basic dashboard layouts + navigation                    [⏳ To Do]
+Day 7: User profile management + preferences                   [⏳ To Do]
+
+Week 2: Webhook System & Trading (Days 8-14)
+----------------------------------------------
+Day 8:  Webhook endpoint models + management system            [⏳ To Do]
+Day 9:  Multiple webhook creation + organization               [⏳ To Do]
+Day 10: Bybit API integration + crypto trading                 [⏳ To Do]
+Day 11: Binance API integration + crypto trading               [⏳ To Do]
+Day 12: Alpaca API integration + stock trading                 [⏳ To Do]
+Day 13: Multi-platform webhook routing logic                   [⏳ To Do]
+Day 14: Trade execution logging + error handling               [⏳ To Do]
+
+Week 3: Analytics & Team Features (Days 15-21)
+------------------------------------------------
+Day 15: Webhook testing tools + validation suite              [⏳ To Do]
+Day 16: Trading session tracking + performance models         [⏳ To Do]
+Day 17: Individual analytics + Chart.js integration           [⏳ To Do]
+Day 18: Team analytics dashboard + platform comparisons       [⏳ To Do]
+Day 19: Performance calculations + metrics                     [⏳ To Do]
+Day 20: Real-time activity feeds + notifications              [⏳ To Do]
+Day 21: User limits enforcement + monitoring                  [⏳ To Do]
+
+Week 4: Admin Panel & Production (Days 22-28)
+-----------------------------------------------
+Day 22: Team leaderboards + competition features              [⏳ To Do]
+Day 23: Admin panel dashboard + user management               [⏳ To Do]
+Day 24: System monitoring + health checks                     [⏳ To Do]
+Day 25: Team settings management + configuration              [⏳ To Do]
+Day 26: Security hardening + Azure Key Vault setup           [⏳ To Do]
+Day 27: Comprehensive testing + bug fixes                     [⏳ To Do]
+Day 28: Documentation + Azure deployment + production config  [⏳ To Do]
+
+Kanban Board Status Legend:
+⏳ To Do: Not started
+🔄 In Progress: Currently working
+✅ Done: Completed
+🚫 Blocked: Waiting on dependency
+
+================================================================================
+                         10. SUCCESS METRICS & KPIS
+================================================================================
+
+Technical Performance:
+• Webhook Processing: < 2 seconds average response time
+• Trade Execution: > 95% success rate
+• System Uptime: 99.9% availability target
+• API Response: < 500ms average for dashboard loads
+
+Team Engagement:
+• Daily Active Users: Track team member activity
+• Webhook Usage: Monitor endpoint utilization
+• Trading Volume: Track trades per day/week/month
+• Feature Adoption: Analytics usage, webhook creation
+
+Business Value:
+• Team Productivity: Automated vs manual trading ratio
+• Performance Improvement: Win rate and P&L tracking
+• User Satisfaction: Team feedback and feature requests
+• System Reliability: Error rates and downtime incidents
+
+================================================================================
+                      11. FUTURE ENHANCEMENT ROADMAP
+================================================================================
+
+Phase 2 (Post-MVP):
+• Additional Brokers: Interactive Brokers, TD Ameritrade
+• Advanced Order Types: Stop-loss, take-profit, trailing stops
+• Risk Management: Position sizing, exposure limits
+• Mobile Application: React Native mobile app
+• Paper Trading: Strategy testing without real money
+
+Phase 3 (Advanced Features):
+• Algorithm Marketplace: Community strategy sharing
+• Backtesting Engine: Historical strategy validation
+• Machine Learning: Performance prediction and optimization
+• White-Label Solution: Customizable for other teams
+• Enterprise Features: SSO, advanced compliance
+
+Long-term Vision:
+• Multi-Team Support: Support for multiple trading teams
+• Advanced Analytics: AI-powered insights and recommendations
+• Integration Ecosystem: Connect with more platforms and tools
+• Educational Resources: Trading courses and best practices
+
+================================================================================
+                       12. RISK MANAGEMENT & COMPLIANCE
+================================================================================
+
+Trading Risks:
+• API Rate Limits: Implement proper throttling and queuing
+• Market Hours: Handle after-hours and weekend scenarios
+• Connection Failures: Robust error handling and retries
+• Position Limits: Configurable limits to prevent overexposure
+
+Security Risks:
+• Data Breaches: Encryption and secure storage practices
+• Unauthorized Access: Strong authentication and authorization
+• API Key Exposure: Secure credential management
+• System Vulnerabilities: Regular security audits and updates
+
+Compliance Considerations:
+• Financial Regulations: Awareness of trading regulations
+• Data Privacy: GDPR and privacy law compliance
+• Audit Trails: Comprehensive logging for compliance
+• User Consent: Clear terms of service and privacy policies
+
+================================================================================
+                      13. TEAM ROLES & RESPONSIBILITIES
+================================================================================
+
+Development Team:
+• Backend Developer: Django, APIs, trading integrations
+• Frontend Developer: Bootstrap UI, Chart.js dashboards
+• DevOps Engineer: Azure deployment, monitoring, security
+• QA Tester: Testing automation, security validation
+
+Business Team:
+• Product Owner: Requirements, user stories, prioritization
+• Trading Expert: Strategy validation, risk management
+• Admin/Team Lead: User management, team coordination
+
+================================================================================
+                               14. APPENDICES
+================================================================================
+
+A. Webhook JSON Format Examples:
+
+For Bybit (Crypto):
+{
+  "platform": "bybit",
+  "symbol": "BTCUSDT",
+  "side": "buy",
+  "qty": 0.01,
+  "order_type": "market"
+}
+
+For Binance (Crypto):
+{
+  "platform": "binance",
+  "symbol": "BTCUSDT",
+  "side": "buy",
+  "qty": 0.01,
+  "order_type": "market"
+}
+
+For Alpaca (Stocks):
+{
+  "platform": "alpaca",
+  "symbol": "AAPL",
+  "side": "buy",
+  "qty": 10,
+  "order_type": "market"
+}
+
+B. Environment Variables Required:
+
+# Django Settings
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database
+DB_NAME=traderelay
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+
+# Social Authentication
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+
+# Trading APIs
+BYBIT_API_KEY=your_bybit_key
+BYBIT_API_SECRET=your_bybit_secret
+BYBIT_TESTNET=True
+
+BINANCE_API_KEY=your_binance_key
+BINANCE_API_SECRET=your_binance_secret
+BINANCE_TESTNET=True
+
+ALPACA_API_KEY=your_alpaca_key
+ALPACA_SECRET_KEY=your_alpaca_secret
+ALPACA_BASE_URL=https://paper-api.alpaca.markets
+
+# Team Settings
+MAX_USERS=10
+REQUIRE_ADMIN_APPROVAL=True
+INVITE_ONLY=True
+
+================================================================================
+                                END OF DOCUMENT
+================================================================================
+
+This Software Specification Requirements document serves as the comprehensive 
+guide for developing TradeRelay, a team-based TradingView webhook automation 
+platform supporting Bybit, Binance, and Alpaca trading platforms.
+
+For questions or clarifications, please contact the development team.
+
+Document prepared by: TradeRelay Development Team
+Contact: development@traderelay.com
+Project Repository: https://github.com/traderelay/platform

@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TradeRelay{% endblock %}</title>
+    
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- TradeRelay Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="TradeRelay - Advanced Trading Platform for Modern Traders">
+    <meta name="author" content="TradeRelay">
+    
+    <style>
+      html, body {
+        height: 100%;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      main.container {
+        flex: 1 0 auto;
+      }
+      .footer-traderelay {
+        flex-shrink: 0;
+      }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-traderelay">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/" aria-label="TradeRelay Home">
+          <i class="fa-solid fa-chart-line me-2 fa-traderelay-secondary" aria-hidden="true"></i>
+          <span>TradeRelay</span>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fa-solid fa-bars text-white"></i>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
+                  <i class="fa-solid fa-user me-2"></i>
+                  <span class="d-none d-md-inline">{{ user.email }}</span>
+                  <span class="d-md-none">Account</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                      <i class="fa-solid fa-user me-2 fa-traderelay-primary" aria-hidden="true"></i> 
+                      Profile
+                    </a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item text-danger" href="{% url 'account_logout' %}">
+                      <i class="fa-solid fa-right-from-bracket me-2 fa-traderelay-danger" aria-hidden="true"></i> 
+                      Logout
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center" href="{% url 'account_login' %}">
+                  <i class="fa-solid fa-right-to-bracket me-2 icon-hover" aria-hidden="true"></i> 
+                  Login
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center" href="{% url 'account_signup' %}">
+                  <i class="fa-solid fa-user-plus me-2 icon-hover" aria-hidden="true"></i> 
+                  Sign Up
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Messages -->
+    <div class="container mt-3">
+      {% if messages %}
+        <div class="fade-in">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              <div class="d-flex align-items-start">
+                <div class="me-3">
+                  {% if message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check fa-traderelay-success" aria-hidden="true"></i>
+                  {% elif message.tags == 'warning' %}
+                    <i class="fa-solid fa-triangle-exclamation fa-traderelay-warning" aria-hidden="true"></i>
+                  {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="fa-solid fa-circle-exclamation fa-traderelay-danger" aria-hidden="true"></i>
+                  {% else %}
+                    <i class="fa-solid fa-circle-info fa-traderelay-primary" aria-hidden="true"></i>
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                  {{ message }}
+                </div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="container slide-up mb-5">
+        {% block content %}
+        <!-- Default content placeholder for development -->
+        <div class="text-center py-5">
+          <div class="icon-bg-primary mx-auto mb-4" style="width: 4rem; height: 4rem; font-size: 1.5rem;">
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          </div>
+          <h1 class="display-4 fw-bold text-primary-blue mb-3">Welcome to TradeRelay</h1>
+          <p class="lead text-gray-tagline">Your advanced trading platform</p>
+          <div class="row mt-4">
+            <div class="col-md-4">
+              <div class="card card-traderelay h-100">
+                <div class="card-body text-center">
+                  <i class="fa-solid fa-bolt fa-3x fa-traderelay-warning mb-3 icon-hover"></i>
+                  <h5 class="card-title">Fast Execution</h5>
+                  <p class="card-text text-gray-tagline">Lightning-fast trade execution with minimal latency.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-traderelay h-100">
+                <div class="card-body text-center">
+                  <i class="fa-solid fa-shield-halved fa-3x fa-traderelay-success mb-3 icon-hover"></i>
+                  <h5 class="card-title">Secure Trading</h5>
+                  <p class="card-text text-gray-tagline">Bank-level security for your trading activities.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-traderelay h-100">
+                <div class="card-body text-center">
+                  <i class="fa-solid fa-chart-pie fa-3x fa-traderelay-primary mb-3 icon-hover"></i>
+                  <h5 class="card-title">Advanced Analytics</h5>
+                  <p class="card-text text-gray-tagline">Comprehensive market analysis and insights.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-traderelay mt-auto">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+              <i class="fa-solid fa-chart-line fa-traderelay-primary me-2" aria-hidden="true"></i>
+              <span>&copy; {% now "Y" %} TradeRelay. All rights reserved.</span>
+            </div>
+          </div>
+          <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+            <div class="d-flex justify-content-center justify-content-md-end align-items-center">
+              <span class="me-3 small text-gray-tagline">Follow us:</span>
+              <div class="d-flex gap-2">
+                <a href="#" class="text-decoration-none" aria-label="Follow us on Twitter" title="Twitter">
+                  <i class="fa-brands fa-twitter fa-traderelay-primary icon-hover" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="text-decoration-none" aria-label="Connect on LinkedIn" title="LinkedIn">
+                  <i class="fa-brands fa-linkedin fa-traderelay-primary icon-hover" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="text-decoration-none" aria-label="View on GitHub" title="GitHub">
+                  <i class="fa-brands fa-github fa-traderelay-primary icon-hover" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="text-decoration-none" aria-label="Join our Discord" title="Discord">
+                  <i class="fa-brands fa-discord fa-traderelay-primary icon-hover" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- TradeRelay Enhanced JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Auto-hide non-important alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert:not([data-persist])');
+        alerts.forEach(alert => {
+          setTimeout(() => {
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            if (bsAlert && alert.parentNode) {
+              bsAlert.close();
+            }
+          }, 5000);
+        });
+
+        // Add loading states to forms
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+          form.addEventListener('submit', function(e) {
+            const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitButton && !submitButton.disabled) {
+              const originalText = submitButton.innerHTML;
+              submitButton.disabled = true;
+              submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Processing...';
+              
+              // Re-enable after 10 seconds as fallback
+              setTimeout(() => {
+                if (submitButton.disabled) {
+                  submitButton.disabled = false;
+                  submitButton.innerHTML = originalText;
+                }
+              }, 10000);
+            }
+          });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+
+        // Add ripple effect to interactive elements
+        const interactiveElements = document.querySelectorAll('.btn, .navbar-brand, .nav-link:not(.dropdown-toggle), .card-traderelay');
+        interactiveElements.forEach(element => {
+          element.addEventListener('click', function(e) {
+            // Only add ripple if element doesn't already have one
+            if (element.querySelector('.ripple')) return;
+            
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            // Ensure element can contain the ripple
+            const position = getComputedStyle(this).position;
+            if (position === 'static') {
+              this.style.position = 'relative';
+            }
+            this.style.overflow = 'hidden';
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+              if (ripple.parentNode) {
+                ripple.remove();
+              }
+            }, 600);
+          });
+        });
+
+        // Enhance navbar collapse behavior on mobile
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        
+        if (navbarToggler && navbarCollapse) {
+          // Close navbar when clicking on nav links (mobile)
+          navbarCollapse.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+              if (window.innerWidth < 992) { // Bootstrap lg breakpoint
+                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                if (bsCollapse) {
+                  bsCollapse.hide();
+                }
+              }
+            });
+          });
+        }
+
+        // Add loading animation to async operations
+        window.TradeRelay = {
+          showLoading: function(element, text = 'Loading...') {
+            if (element) {
+              element.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> ${text}`;
+              element.disabled = true;
+            }
+          },
+          hideLoading: function(element, originalText) {
+            if (element) {
+              element.innerHTML = originalText;
+              element.disabled = false;
+            }
+          }
+        };
+      });
+
+      // Performance optimization: Preload critical resources
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          // Preload common icons
+          const iconPreloader = document.createElement('div');
+          iconPreloader.style.display = 'none';
+          iconPreloader.innerHTML = `
+            <i class="fa-solid fa-spinner"></i>
+            <i class="fa-solid fa-check"></i>
+            <i class="fa-solid fa-times"></i>
+            <i class="fa-solid fa-exclamation"></i>
+          `;
+          document.body.appendChild(iconPreloader);
+          setTimeout(() => iconPreloader.remove(), 100);
+        });
+      }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
