@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-gray-trade">My Exchange Accounts</h2>
-    <a href="{% url 'bots:exchange_create' %}" class="btn btn-traderelay-primary">
+    <a href="{% url 'bots:create_exchange' %}" class="btn btn-traderelay-primary">
         <i class="fa-solid fa-plus me-2"></i>Add Exchange
     </a>
 </div>
@@ -31,17 +31,7 @@
                         <div class="fw-bold text-primary-blue">{{ exchange.get_exchange_type_display }}</div>
                     </div>
                     
-                    <div class="mb-3">
-                        <small class="text-gray-tagline">API Key:</small>
-                        <div class="input-group mt-1">
-                            <input type="password" class="form-control form-control-sm" 
-                                   value="{{ exchange.get_credential:'api_key'|default:'Not set' }}" readonly>
-                            <button class="btn btn-outline-secondary btn-sm" type="button" 
-                                    onclick="toggleApiKey(this)">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
+
                     
                     <div class="row text-center mb-3">
                         <div class="col-6">

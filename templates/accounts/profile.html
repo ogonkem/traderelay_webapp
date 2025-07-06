@@ -258,7 +258,7 @@
             <i class="fa-solid fa-list me-2"></i>View My Exchanges
           </a>
           <a href="{% url 'bots:create_bot' %}" class="btn btn-traderelay-primary">
-            <i class="fa-solid fa-plus me-2"></i>Create New Bot
+            <i class="fa-solid fa-plus me-1"></i>Create New Bot
           </a>
           <button class="btn btn-traderelay-secondary">
             <i class="fa-solid fa-question-circle me-2"></i>Get Help
@@ -350,7 +350,7 @@
         <button class="btn btn-sm btn-outline-secondary">
           <i class="fa-solid fa-filter me-1"></i>Filter
         </button>
-        <a href="{{ create_bot_url }}" class="btn btn-sm btn-traderelay-primary">
+        <a href="{% url 'bots:create_bot' %}" class="btn btn-sm btn-traderelay-primary">
           <i class="fa-solid fa-plus me-1"></i>Create New Bot
         </a>
       </div>
@@ -366,8 +366,8 @@
                 <div class="d-flex align-items-center mb-3">
                   <div class="bot-avatar me-3">
                     <div class="icon-bg-primary" style="width: 2.5rem; height: 2.5rem; font-size: 0.9rem;">
-                      {% if bot.broker %}
-                        <span class="fw-bold">{{ bot.broker|slice:":2"|upper }}</span>
+                      {% if bot.exchange.exchange_type %}
+                        <span class="fw-bold">{{ bot.exchange.exchange_type|slice:":2"|upper }}</span>
                       {% else %}
                         <i class="fa-solid fa-robot"></i>
                       {% endif %}
@@ -375,24 +375,18 @@
                   </div>
                   <div class="flex-grow-1">
                     <h6 class="mb-0 text-gray-trade">{{ bot.name }}</h6>
-                    <small class="text-gray-tagline">{{ bot.broker|default:"Unknown Exchange" }}</small>
+                    <small class="text-gray-tagline">{{ bot.exchange.name|default:"Unknown Exchange" }}</small>
                   </div>
                   <div class="bot-status">
                     <span class="badge 
-                      {% if bot.status == 'active' %}bg-success
-                      {% elif bot.status == 'paused' %}bg-warning
-                      {% elif bot.status == 'error' %}bg-danger
+                      {% if bot.is_active %}bg-success
                       {% else %}bg-secondary{% endif %}">
-                      {% if bot.status == 'active' %}
+                      {% if bot.is_active %}
                         <i class="fa-solid fa-circle-play me-1"></i>
-                      {% elif bot.status == 'paused' %}
-                        <i class="fa-solid fa-circle-pause me-1"></i>
-                      {% elif bot.status == 'error' %}
-                        <i class="fa-solid fa-circle-exclamation me-1"></i>
                       {% else %}
-                        <i class="fa-solid fa-circle me-1"></i>
+                        <i class="fa-solid fa-circle-pause me-1"></i>
                       {% endif %}
-                      {{ bot.status|title }}
+                      {% if bot.is_active %}Active{% else %}Inactive{% endif %}
                     </span>
                   </div>
                 </div>
@@ -401,33 +395,39 @@
                 <div class="bot-stats mb-3">
                   <div class="row text-center">
                     <div class="col-4">
-                      <small class="text-gray-tagline">Trades</small>
-                      <div class="fw-bold text-primary-blue">{{ bot.total_trades|default:"0" }}</div>
+                      <small class="text-gray-tagline">Symbol</small>
+                      <div class="fw-bold text-primary-blue">{{ bot.symbol|default:"N/A" }}</div>
                     </div>
                     <div class="col-4">
-                      <small class="text-gray-tagline">P&L</small>
-                      <div class="fw-bold {% if bot.pnl >= 0 %}text-success{% else %}text-danger{% endif %}">
-                        {{ bot.pnl|default:"$0.00" }}
-                      </div>
+                      <small class="text-gray-tagline">Position Size</small>
+                      <div class="fw-bold text-primary-blue">${{ bot.position_size }}</div>
                     </div>
                     <div class="col-4">
-                      <small class="text-gray-tagline">Win Rate</small>
-                      <div class="fw-bold text-primary-blue">{{ bot.win_rate|default:"0" }}%</div>
+                      <small class="text-gray-tagline">Created</small>
+                      <div class="fw-bold text-primary-blue">{{ bot.created_at|date:"M d" }}</div>
                     </div>
                   </div>
                 </div>
                 
+                <!-- Bot Description -->
+                {% if bot.description %}
+                <div class="bot-description mb-3">
+                  <small class="text-gray-tagline">Description:</small>
+                  <div class="text-gray-trade small">{{ bot.description|truncatechars:60 }}</div>
+                </div>
+                {% endif %}
+                
                 <!-- Bot Actions -->
                 <div class="bot-actions d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-primary flex-fill">
+                  <a href="{% url 'bots:bot_logs' bot.id %}" class="btn btn-sm btn-outline-primary flex-fill">
                     <i class="fa-solid fa-eye me-1"></i>View
-                  </button>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="fa-solid fa-gear"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                  </button>
+                  </a>
+                  <a href="{% url 'bots:update_bot' bot.id %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa-solid fa-edit"></i>
+                  </a>
+                  <a href="{% url 'bots:delete_bot' bot.id %}" class="btn btn-sm btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
                 </div>
               </div>
             </div>
@@ -441,7 +441,7 @@
           </div>
           <h5 class="text-gray-trade mb-2">No Trading Bots Yet</h5>
           <p class="text-gray-tagline mb-4">Create your first trading bot to start automating your strategies.</p>
-          <a href="{{ create_bot_url }}" class="btn btn-traderelay-primary">
+          <a href="{% url 'bots:create_bot' %}" class="btn btn-traderelay-primary">
             <i class="fa-solid fa-plus me-2"></i>Create Your First Bot
           </a>
         </div>

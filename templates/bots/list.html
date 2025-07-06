@@ -31,10 +31,16 @@
                     
                     <div class="mb-3">
                         <div class="d-flex align-items-center mb-2">
-                            <i class="fa-solid fa-chart-line me-2 fa-traderelay-primary"></i>
-                            <small class="text-gray-tagline">Strategy:</small>
+                            <i class="fa-solid fa-file-text me-2 fa-traderelay-primary"></i>
+                            <small class="text-gray-tagline">Description:</small>
                         </div>
-                        <div class="fw-bold text-primary-blue">{{ bot.strategy }}</div>
+                        <div class="fw-bold text-primary-blue">
+                            {% if bot.description %}
+                                {{ bot.description|truncatechars:50 }}
+                            {% else %}
+                                <em class="text-muted">No description</em>
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="mb-3">
@@ -48,10 +54,10 @@
                     <div class="mb-3">
                         <div class="d-flex align-items-center mb-2">
                             <i class="fa-solid fa-coins me-2 fa-traderelay-primary"></i>
-                            <small class="text-gray-tagline">Symbol:</small>
+                            <small class="text-gray-tagline">Position Size:</small>
                         </div>
                         <div class="fw-bold">
-                            <code class="text-primary-blue">{{ bot.symbol }}</code>
+                            <code class="text-primary-blue">${{ bot.position_size }}</code>
                         </div>
                     </div>
                     
@@ -67,10 +73,10 @@
                     </div>
                     
                     <div class="d-flex gap-2 mb-2">
-                        <a href="{% url 'bots:bot_detail' bot.id %}" class="btn btn-traderelay-secondary btn-sm flex-fill">
+                        <a href="{% url 'bots:bot_logs' bot.id %}" class="btn btn-traderelay-secondary btn-sm flex-fill">
                             <i class="fa-solid fa-eye me-1"></i>View
                         </a>
-                        <a href="{% url 'bots:edit_bot' bot.id %}" class="btn btn-outline-primary btn-sm">
+                        <a href="{% url 'bots:update_bot' bot.id %}" class="btn btn-outline-primary btn-sm">
                             <i class="fa-solid fa-edit"></i>
                         </a>
                     </div>

@@ -47,7 +47,7 @@ class ExchangeForm(forms.ModelForm):
 class BotForm(forms.ModelForm):
     class Meta:
         model = Bot
-        fields = ['name', 'exchange', 'webhook']
+        fields = ['name', 'exchange', 'webhook', 'description', 'position_size']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control-traderelay',
@@ -61,9 +61,20 @@ class BotForm(forms.ModelForm):
                 'class': 'form-control-traderelay',
                 'placeholder': 'Select Webhook'
             }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control-traderelay',
+                'placeholder': 'Describe your bot strategy...',
+                'rows': 3
+            }),
+            'position_size': forms.NumberInput(attrs={
+                'class': 'form-control-traderelay',
+                'placeholder': 'e.g., 100.00',
+                'step': '0.01',
+                'min': '0.01'
+            }),
         }
         
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         
         # Set user for filtering

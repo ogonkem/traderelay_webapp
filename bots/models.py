@@ -57,7 +57,7 @@ class Exchange(models.Model):
         ("", "Select Exchange"),
         ("bybit", "Bybit"),
         ("binance", "Binance"),
-        # ("kraken", "Kraken"),
+        ("gateio", "Gateio"),
         # ("mexc", "MEXC"),
         # ("kucoin", "KuCoin"),
         # ("coinbase", "Coinbase"),
@@ -99,6 +99,9 @@ class Bot(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
+    description = models.TextField(blank=True, null=True)
+    symbol = models.CharField(max_length=100, blank=True, null=True)
+    position_size = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     
     def __str__(self):
         return f"{self.user.username} - {self.name}"

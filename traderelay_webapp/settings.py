@@ -88,12 +88,25 @@ WSGI_APPLICATION = 'traderelay_webapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Use PostgreSQL if environment variables are set, otherwise use SQLite
+if os.environ.get('POSTGRES_DB'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('POSTGRES_DB', 'traderelay_db'),
+            'USER': os.environ.get('POSTGRES_USER', 'traderelay_user'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'traderelay_password'),
+            'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+            'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -168,3 +181,29 @@ LOGOUT_REDIRECT_URL = ''
 
 # Email settings (for development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Celery Configuration - RabbitMQ
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Celery task settings
+CELERY_TASK_ROUTES = {
+    'bots.trading.execute_trade_task': {'queue': 'trading'},
+}
+
+CELERY_TASK_ANNOTATIONS = {
+    'bots.trading.execute_trade_task': {
+        'rate_limit': '10/m',  # Max 10 trades per minute
+        'time_limit': 300,     # 5 minutes timeout
+        'soft_time_limit': 240,  # 4 minutes soft timeout
+    }
+}
+
+# Celery worker settings
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 1000
