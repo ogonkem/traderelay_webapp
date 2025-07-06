@@ -60,10 +60,77 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             {% if user.is_authenticated %}
+              <!-- Trading Bots -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="botsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-robot me-2"></i>
+                  <span class="d-none d-md-inline">Bots</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="botsDropdown">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:bot_list' %}">
+                      <i class="fa-solid fa-list me-2 fa-traderelay-primary"></i>
+                      My Bots
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:create_bot' %}">
+                      <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
+                      Create Bot
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+              <!-- Exchanges -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="exchangesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-building me-2"></i>
+                  <span class="d-none d-md-inline">Exchanges</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="exchangesDropdown">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:exchange_list' %}">
+                      <i class="fa-solid fa-list me-2 fa-traderelay-primary"></i>
+                      My Exchanges
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:create_exchange' %}">
+                      <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
+                      Add Exchange
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+              <!-- Webhooks -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="webhooksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-link me-2"></i>
+                  <span class="d-none d-md-inline">Webhooks</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="webhooksDropdown">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:webhook_list' %}">
+                      <i class="fa-solid fa-list me-2 fa-traderelay-primary"></i>
+                      My Webhooks
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'bots:create_webhook' %}">
+                      <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
+                      Create Webhook
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+              <!-- User Dropdown -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
                   <i class="fa-solid fa-user me-2"></i>
-                  <span class="d-none d-md-inline">{{ user.email }}</span>
+                  <span class="d-none d-md-inline">{{ user.username }}</span>
                   <span class="d-md-none">Account</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

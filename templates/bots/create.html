@@ -54,12 +54,36 @@
                         </div>
                     </div>
                     
+                    <div class="mb-3">
+                        <label for="id_position_size" class="form-label-traderelay">
+                            <i class="fa-solid fa-coins me-2 fa-traderelay-primary"></i>
+                            Position Size
+                        </label>
+                        {{ form.position_size }}
+                        <small class="form-text text-gray-tagline">
+                            Amount to invest per trade (e.g., 100.00)
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label-traderelay">
+                            <i class="fa-solid fa-file-text me-2 fa-traderelay-primary"></i>
+                            Bot Description
+                        </label>
+                        {{ form.description }}
+                        <small class="form-text text-gray-tagline">
+                            Describe your bot's trading strategy and parameters
+                        </small>
+                    </div>
+                    
                     <div class="info-box">
                         <i class="fa-solid fa-info-circle me-2"></i>
                         <strong>Trading Bot Setup:</strong><br>
                         • Give your bot a clear, descriptive name<br>
                         • Select an exchange account with sufficient balance<br>
                         • Choose the appropriate webhook for signal processing<br>
+                        • Set a position size that fits your risk tolerance<br>
+                        • Add a description to document your bot's strategy<br>
                         • Ensure your exchange API permissions are properly configured
                     </div>
                     

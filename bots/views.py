@@ -11,6 +11,7 @@ import logging
 from .models import *
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .trading import process_trading_signal
 
 logger = logging.getLogger(__name__)
 
@@ -67,27 +68,6 @@ def webhook_handler(request, webhook_id, webhook_key):
     except Exception as e:
         logger.error(f"Webhook error: {e}")
         return HttpResponseBadRequest(f"Error: {e}")
-
-def process_trading_signal(payload, webhook):
-    """Process the trading signal - customize this for your needs"""
-    # Basic validation
-    required_fields = ['type', 'side', 'amount', 'symbol']
-    for field in required_fields:
-        if field not in payload:
-            raise ValueError(f"Missing required field: {field}")
-    
-    # Here you would implement your actual trading logic
-    # For now, just print the signal
-    print(f"Processing signal for {webhook.user.username}:")
-    print(f"  Type: {payload.get('type')}")
-    print(f"  Side: {payload.get('side')}")
-    print(f"  Amount: {payload.get('amount')}")
-    print(f"  Symbol: {payload.get('symbol')}")
-    print(f"  Take Profit: {payload.get('takeProfit', 'N/A')}")
-    print(f"  Stop Loss: {payload.get('stopLoss', 'N/A')}")
-    
-    # TODO: Add your actual trading execution logic here
-    # Example: send_order_to_exchange(payload, webhook.user)
 
 @login_required
 def webhook_list(request):

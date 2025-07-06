@@ -5,18 +5,16 @@ from django.utils import timezone
 from django.http import JsonResponse
 from .models import UserProfile, UserInvitation
 from django.contrib.auth.models import User
+from bots.models import Bot
 
 
 @login_required
 def profile_view(request):
     """View for user profile"""
     profile = get_object_or_404(UserProfile, user=request.user)
-    # Dummy bots data
-    bots = [
-        {"name": "BTCUSDT Spot Bot", "status": "active", "broker": "Bybit", "total_trades": 12, "pnl": "+$120.00", "win_rate": 75},
-        {"name": "ETHUSDT Futures Bot", "status": "paused", "broker": "Binance", "total_trades": 8, "pnl": "-$30.00", "win_rate": 50},
-    ]
-    create_bot_url = "/bots/create/"  # adjust as needed
+    
+    # Get real bots from the Bot model
+    bots = Bot.objects.filter(user=request.user).order_by('-created_at')
 
     # Calculate usage percentages for progress bars
     max_webhooks = getattr(profile, 'max_webhooks', 0) or 0
@@ -37,7 +35,6 @@ def profile_view(request):
         'profile': profile,
         'user': request.user,
         'bots': bots,
-        'create_bot_url': create_bot_url,
         'webhooks_used_percent': webhooks_used_percent,
         'daily_trades_used_percent': daily_trades_used_percent,
     }

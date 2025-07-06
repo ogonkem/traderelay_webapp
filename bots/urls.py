@@ -9,7 +9,7 @@ urlpatterns = [
     path('<uuid:webhook_id>/<str:webhook_key>/', views.webhook_handler, name='webhook_handler'),
     
     # webhooks urls
-    path('', views.webhook_list, name='webhook_list'),
+    path('webhooks/', views.webhook_list, name='webhook_list'),
     path('create_webhook/', views.create_webhook, name='create_webhook'),
     path('<int:pk>/delete_webhook/', views.delete_webhook, name='delete_webhook'),
     path('<int:pk>/webhook_logs/', views.webhook_logs, name='webhook_logs'),
