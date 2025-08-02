@@ -25,7 +25,7 @@ stripe==7.11.0
 
 # Trading APIs
 pybit==5.6.0
-alpaca-trade-api==3.0.2
+gate-api>=6.0.0
 
 # Development Tools
 black==23.12.1
@@ -50,3 +50,9 @@ Pillow==10.2.0
 gate-api>=6.21.0
 websockets>=11.0
 asyncio
+
+celery>=5.3.0
+redis>=5.0.0
+flower>=2.0.0
+
+PyJWT

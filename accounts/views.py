@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from .models import UserProfile, UserInvitation
 from django.contrib.auth.models import User
 from bots.models import Bot
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login
 
 
 @login_required
@@ -39,4 +41,5 @@ def profile_view(request):
         'daily_trades_used_percent': daily_trades_used_percent,
     }
     return render(request, 'accounts/profile.html', context)
+
 

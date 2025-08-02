@@ -1,0 +1,141 @@
+
+make base templete
+create base.html
+cut body and header tags from home.html and paste in base.html
+initiate
+{% block content %}
+<!-- content --> => different pages
+{% endblock %}
+
+create includes/footer.html and includes/navbar.html
+<!-- navbar -->
+{% include 'includes/navbar.html' %}
+....
+<!-- footer -->
+{% include 'includes/footer.html' %}
+
+using custom user model
+$ python manage.py startapp accounts
+insert 'accounts', in INSTALLED_APPS in settings.py
+
+create Accounts model in models.py
+override already created admin by creating =>
+class MyAccountManager(BaseUserManager)
+class Account(AbstractBaseUser)
+insert AUTH_USER_MODEL = 'accounts.Account' in settings.py
+
+register Accounts model in accounts/admin.py
+delete db.sqlite3
+python manage.py runserver => reinitialise db.sqlite3
+python manage.py makemigrations
+python manage.py migrate
+
+create admin superuser
+winpty python manage.py createsuperuser
+Username (leave blank to use 'ogonk'): webstacka_admin_1
+Email address: oseejobs@gmail.com
+password:
+
+create a new repository on the command line
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ogonkem/webstacka.git
+git push -u origin main
+
+push an existing repository from the command line
+git commit -m "04_10_2021 push"
+git remote add origin https://github.com/ogonkem/webstacka.git
+git push -u origin main
+
+git add -A
+git commit -m "01_02_2022 push"
+git push origin main
+
+
+setup media file (photos etc)
+in settings below static setup
+# media files configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR /'media'
+in greatkart/urls.py add below to urlpatterns
++ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+add => from django.conf.urls.static import static
+add => from django.conf import settings
+
+
+____________________________________________________
+from pathlib import Path
+import json
+
+with open('/etc/webstacka_config.json') as config_file:
+    config = json.load(config_file)
+
+
+ALLOWED_HOSTS = ['193.43.134.122','www.webstacka.com']
+
+
+# SMTP configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = config.get('EMAIL_PASS')
+EMAIL_USE_TLS = True
+____________________________________________________
+
+Stop the container(s) using the following command:
+docker-compose down
+
+Delete all containers using the following command:
+docker rm -f $(docker ps -a -q)
+
+Delete all volumes using the following command:
+docker volume rm $(docker volume ls -q)
+
+Restart the containers using the following command:
+docker-compose up -d
+
+docker-compose -f docker-compose.prod.yml up
+
+docker-compose -f gm-ui-dev.yml build
+docker-compose -f gm-ui-local.yml up --build
+
+docker-compose -f gm-ui-dev.yml exec gm-dev bash 
+# exit bash
+exit
+
+Test
+docker-compose run --rm app sh -c
+
+____________________________________________________
+
+https://www.youtube.com/watch?v=CmWhiLclPHM
+# /opt/venv/bin/python manage.py dumpdata --natural-foreign --natural-primary -e auth.permission -e contenttypes > webstacka.json
+
+docker compose -f docker-compose.prod.yml up
+
+____________________________________________________
+
+https://testdriven.io/blog/django-lets-encrypt/
+
+https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
+
+https://docs.djangoproject.com/en/3.1/intro/tutorial01/
+
+
+# Build the image locally
+docker build -t mksecops.azurecr.io/gm/gm-ui:dev .
+
+docker build -f path/to/Dockerfile path/to/build/context
+ docker build -f Dockerfile src
+
+# Then deploy
+docker stack deploy -c gm-ui-dev.yml gm-ui
+
+# From either master or worker node, execute into the container
+docker exec -it $(docker ps -q -f name=WEB_gm-ui-all-in-one) bash
+
+# View real-time logs for the WEB_gm-ui-all-in-one service
+docker service logs WEB_gm-ui-all-in-one -f -t
