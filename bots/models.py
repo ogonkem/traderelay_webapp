@@ -6,6 +6,7 @@ import secrets
 import string
 from django.urls import reverse
 from django.conf import settings
+import os
 
 class WebhookEndpoint(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -33,8 +34,8 @@ class WebhookEndpoint(models.Model):
     @property
     def webhook_url(self):
 
-        base_url = getattr(settings, 'BASE_URL', 'http://localhost:8000')
-        return f"{base_url}/webhooks/{self.webhook_id}/{self.webhook_key}/"
+        base_url = getattr(settings, 'BASE_URL', os.environ.get('WEBHOOK_BASE_URL', 'http://localhost'),)
+        return f"{base_url}/bots/webhooks/{self.webhook_id}/{self.webhook_key}/"
     
     def __str__(self):
         return f"{self.user.username} - {self.name}"

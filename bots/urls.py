@@ -6,7 +6,7 @@ app_name = 'bots'
 
 urlpatterns = [
     # Public webhook endpoint - no auth required
-    path('<uuid:webhook_id>/<str:webhook_key>/', views.webhook_handler, name='webhook_handler'),
+    path('webhooks/<uuid:webhook_id>/<str:webhook_key>/', views.webhook_handler, name='webhook_handler'),
     
     # webhooks urls
     path('webhooks/', views.webhook_list, name='webhook_list'),

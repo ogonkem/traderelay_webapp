@@ -54,7 +54,7 @@
                     </div>
                     
                     <div class="d-flex gap-2">
-                        <button class="btn btn-outline-success btn-sm flex-fill" onclick="testConnection({{ exchange.pk }})">
+                        <button class="btn btn-outline-success btn-sm flex-fill" onclick="testConnection( {{ exchange.pk }} )">
                             <i class="fa-solid fa-plug me-1"></i>Test Connection
                         </button>
                         <a href="{% url 'bots:delete_exchange' exchange.pk %}" class="btn btn-outline-danger btn-sm">
@@ -73,7 +73,7 @@
         </div>
         <h4 class="text-gray-trade mb-2">No Exchange Accounts Yet</h4>
         <p class="text-gray-tagline mb-4">Add your first exchange account to start trading.</p>
-        <a href="{% url 'bots:exchange_create' %}" class="btn btn-traderelay-primary">
+        <a href="{% url 'bots:create_exchange' %}" class="btn btn-traderelay-primary">
             <i class="fa-solid fa-plus me-2"></i>Add Your First Exchange
         </a>
     </div>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Create Bot - TradeRelay{% endblock %}
+{% block title %}{% if bot %}Update Bot - TradeRelay{% else %}Create Bot - TradeRelay{% endif %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,11 +8,17 @@
             <div class="card-header">
                 <h5 class="mb-0">
                     <i class="fa-solid fa-robot me-2 fa-traderelay-primary"></i>
-                    Create New Trading Bot
+                    {% if bot %}
+                        Update Bot: {{ bot.name }}
+                    {% else %}
+                        Create New Trading Bot
+                    {% endif %}
                 </h5>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" 
+                      action="{% if bot %}{% url 'bots:update_bot' bot.pk %}{% else %}{% url 'bots:create_bot' %}{% endif %}"
+                      id="{% if bot %}update-bot-form{% else %}create-bot-form{% endif %}">
                     {% csrf_token %}
                     
                     <div class="mb-3">
@@ -97,8 +103,13 @@
                     </div>
                     
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-traderelay-primary">
-                            <i class="fa-solid fa-robot me-2"></i>Create Trading Bot
+                            <button type="submit" class="btn btn-traderelay-primary">
+                                <i class="fa-solid fa-robot me-2"></i>
+                                {% if bot %}
+                                    Update Trading Bot
+                                {% else %}
+                                    Create Trading Bot
+                                {% endif %}
                         </button>
                         <a href="{% url 'bots:bot_list' %}" class="btn btn-traderelay-secondary">
                             Cancel

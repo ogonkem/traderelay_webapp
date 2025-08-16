@@ -10,11 +10,17 @@
             <div class="card-header">
                 <h5 class="mb-0">
                     <i class="fa-solid fa-plus me-2 fa-traderelay-primary"></i>
-                    Add New Exchange Account
+                    {% if exchange %}
+                        Update Exchange: {{ exchange.name }}
+                    {% else %}
+                        Create New Exchange Account
+                    {% endif %}
                 </h5>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" 
+                      action="{% if exchange %}{% url 'bots:update_exchange' exchange.pk %}{% else %}{% url 'bots:create_exchange' %}{% endif %}"
+                      id="{% if exchange %}update-exchange-form{% else %}create-exchange-form{% endif %}">
                     {% csrf_token %}
                     
                     <div class="row">
@@ -47,8 +53,12 @@
                             <i class="fa-solid fa-key me-2 fa-traderelay-primary"></i>
                             API Credentials (JSON)
                         </label>
-                        <textarea rows="6" class="form-control-traderelay" id="credentials" name="credentials" 
-                            placeholder="{'api_key': 'your-key', 'api_secret': 'your-secret'}" required></textarea>
+                        {% if exchange %}
+                            {{ form.credentials }}
+                        {% else %}
+                            <textarea rows="6" class="form-control-traderelay" id="credentials" name="credentials" 
+                                placeholder='{"api_key": "your-key", "api_secret": "your-secret"} OR {"api_key": "your-key"}'' required></textarea>
+                        {% endif %}
                         <!-- <small class="form-text text-gray-tagline">
                             Example: <code>{"api_key": "your-key", "api_secret": "your-secret"}</code>
                         </small> -->
@@ -74,7 +84,12 @@
                     
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-traderelay-primary">
-                            <i class="fa-solid fa-plus me-2"></i>Add Exchange Account
+                            <i class="fa-solid fa-plus me-2"></i>
+                            {% if exchange %}
+                                Update Exchange
+                            {% else %}
+                                Create Exchange
+                            {% endif %}
                         </button>
                         <a href="{% url 'bots:exchange_list' %}" class="btn btn-traderelay-secondary">
                             Cancel

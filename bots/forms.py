@@ -9,8 +9,8 @@ class ExchangeForm(forms.ModelForm):
         widgets = {
             'credentials': forms.Textarea(attrs={
                 'class': 'form-control-traderelay',
-                'rows': 10,
-                'placeholder': "{\n  'api_key': 'your-key',\n  'api_secret': 'your-secret'\n}"
+                'rows': 6,
+                'placeholder': '{"api_key": "your-key", "api_secret": "your-secret"} OR {"api_key": "your-key"}'
             }),
             'exchange_type': forms.Select(attrs={
                 'class': 'form-control-traderelay',
@@ -24,6 +24,13 @@ class ExchangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        # If this is an update (instance exists and has a pk), disable exchange_type
+        if self.instance and self.instance.pk:
+            self.fields['exchange_type'].disabled = True
+            self.fields['exchange_type'].widget.attrs['readonly'] = True
+            self.fields['exchange_type'].help_text = "Exchange type cannot be changed after creation."
+        
         for field in self.fields.values():
             field.widget.attrs.setdefault('class', 'form-control-traderelay')
 
@@ -64,7 +71,7 @@ class BotForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control-traderelay',
                 'placeholder': 'Describe your bot strategy...',
-                'rows': 3
+                'rows': 2
             }),
             'position_size': forms.NumberInput(attrs={
                 'class': 'form-control-traderelay',
@@ -84,7 +91,16 @@ class BotForm(forms.ModelForm):
         if user:
             self.fields['exchange'].queryset = Exchange.objects.filter(user=user)
             self.fields['webhook'].queryset = WebhookEndpoint.objects.filter(user=user)
-        
+            
+        # If this is an update (instance exists and has a pk), disable exchange and webhook
+        if self.instance and self.instance.pk:
+            self.fields['exchange'].disabled = True
+            self.fields['exchange'].widget.attrs['readonly'] = True
+            self.fields['exchange'].help_text = "Exchange cannot be changed after creation."
+            self.fields['webhook'].disabled = True
+            self.fields['webhook'].widget.attrs['readonly'] = True
+            self.fields['webhook'].help_text = "Webhook cannot be changed after creation."
+
         for field in self.fields.values():
             field.widget.attrs.setdefault('class', 'form-control-traderelay')
     
@@ -92,21 +108,27 @@ class BotForm(forms.ModelForm):
         cleaned_data = super().clean()
         exchange = cleaned_data.get('exchange')
         webhook = cleaned_data.get('webhook')
-        
+    
         # Check if both exchange and webhook are provided
         if exchange and webhook:
             # Check if this combination already exists for this user
-            existing_bot = Bot.objects.filter(
+            existing_bot_query = Bot.objects.filter(
                 user=self.user,
                 exchange=exchange,
                 webhook=webhook
-            ).first()
+            )
             
+            # IMPORTANT: Exclude the current instance if we're updating
+            if self.instance and self.instance.pk:
+                existing_bot_query = existing_bot_query.exclude(pk=self.instance.pk)
+            
+            existing_bot = existing_bot_query.first()
+        
             if existing_bot:
                 raise forms.ValidationError(
                     f"A bot with this exchange and webhook combination already exists: {existing_bot.name}"
                 )
-        
+    
         return cleaned_data
     
     def clean_exchange(self):

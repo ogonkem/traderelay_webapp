@@ -99,8 +99,8 @@ docker-compose up -d
 
 docker-compose -f docker-compose.prod.yml up
 
-docker-compose -f gm-ui-dev.yml build
-docker-compose -f gm-ui-local.yml up --build
+docker-compose -f traderelay-local.yml build
+docker-compose -f traderelay-local.yml up --build
 
 docker-compose -f gm-ui-dev.yml exec gm-dev bash 
 # exit bash

@@ -121,17 +121,28 @@ def exchange_list(request):
     exchanges = Exchange.objects.filter(user=request.user)
     return render(request, 'exchanges/list.html', {'exchanges': exchanges})
 
+
 @login_required
 def create_exchange(request):
     if request.method == 'POST':
         form = ExchangeForm(request.POST)
         if form.is_valid():
+            # Save the exchange with the current user
             exchange = form.save(commit=False)
             exchange.user = request.user
             exchange.save()
+            
+            # Add success message
+            messages.success(request, f"Exchange '{exchange.name}' created successfully!")
+            
             return redirect('bots:exchange_list')
+        else:
+            # Add error message if form is invalid
+            messages.error(request, "Please correct the errors below.")
     else:
+        # GET request - show empty form
         form = ExchangeForm()
+    
     return render(request, 'exchanges/create.html', {'form': form})
 
 @login_required
@@ -148,12 +159,20 @@ def exchange_logs(request, pk):
 @login_required
 def update_exchange(request, pk):
     exchange = get_object_or_404(Exchange, pk=pk, user=request.user)
+    print(f"exchange:{exchange}, pk:{pk}, user:{request.user}")
     if request.method == 'POST':
+        print(f"is_post")
         form = ExchangeForm(request.POST, instance=exchange)
         if form.is_valid():
+            print(f"form is valid")
             form.save()
             return redirect('bots:exchange_list')
+        else:
+            print(f"form is invalid")
+            print(f"Form errors: {form.errors}")
+            print(f"Non-field errors: {form.non_field_errors()}")
     else:
+        print(f"is_not_post")
         form = ExchangeForm(instance=exchange)
     return render(request, 'exchanges/create.html', {'form': form, 'exchange': exchange})
 
@@ -203,13 +222,22 @@ def bot_logs(request, pk):
 @login_required
 def update_bot(request, pk):
     bot = get_object_or_404(Bot, pk=pk, user=request.user)
+    print(f"bot:{bot}, pk:{pk}, user:{request.user}")
     if request.method == 'POST':
+        print(f"is_post")
         form = BotForm(request.POST, instance=bot, user=request.user)
         if form.is_valid():
+            print(f"form is valid")
             form.save()
             messages.success(request, f'Bot "{bot.name}" updated successfully!')
             return redirect('bots:bot_list')
+        else:
+            # Print form errors to see what's invalid
+            print(f"Form is invalid")
+            print(f"Form errors: {form.errors}")
+            print(f"Non-field errors: {form.non_field_errors()}")
     else:
+        print(f"is_not_post")
         form = BotForm(instance=bot, user=request.user)
     return render(request, 'bots/create.html', {'form': form, 'bot': bot})
 
